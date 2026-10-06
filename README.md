@@ -29,6 +29,7 @@ WebUI is under constant development and testing, but you can try it out right no
 
 ## Changelog
 
+- Redesigned the WebUI into a categorized Studio and Model Hub, with direct URL, public catalog, and local ZIP model workflows
 - WebUI for easier conversions and downloading of voice models
 - Support for cover generations from a local audio file
 - Option to keep intermediate files generated. e.g. Isolated vocals/instrumentals
@@ -63,7 +64,7 @@ Then follow the instructions in the notebook to run the webui.
 
 For those without a powerful enough NVIDIA GPU, you may try AICoverGen out using Google Colab.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SociallyIneptWeeb/AICoverGen/blob/main/AICoverGen_colab.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Zerosxer/AICoverGenUnoffical/blob/main/AICoverGen_colab.ipynb)
 
 For those who face issues with Google Colab notebook disconnecting after a few minutes, here's an alternative that doesn't use the WebUI.
 
@@ -98,12 +99,12 @@ Model archives can be downloaded from any public HTTP(S) host. Private/local net
 Open a command line window and run these commands to clone this entire repository and install the additional dependencies required.
 
 ```
-git clone https://github.com/SociallyIneptWeeb/AICoverGen
-cd AICoverGen
+git clone https://github.com/Zerosxer/AICoverGenUnoffical.git
+cd AICoverGenUnoffical
 python -m venv .venv
 .venv\Scripts\activate
 python -m pip install "pip<24.1"
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ### Download required models
@@ -139,28 +140,28 @@ Once the following output message `Running on local URL:  http://127.0.0.1:7860`
 
 ![](images/webui_dl_model.png?raw=true)
 
-Navigate to the `ดาวน์โหลดโมเดล` tab, open `ดาวน์โหลดจากลิงก์`, and paste the download link to the RVC model and give it a unique name.
+Open `📦 จัดการโมเดลเสียง (Model Hub)` and choose `🔗 ดาวน์โหลดผ่าน Direct URL`. Paste a direct ZIP download link for the RVC model and give it a unique name.
 You may search the [AI Hub Discord](https://discord.gg/aihub) where already trained voice models are available for download. You may refer to the examples for how the download link should look like.
-The downloaded zip file should contain the .pth model file and an optional .index file.
+The ZIP archive must contain exactly one `.pth` model file and may contain one `.index` file.
 
-Once the two input fields are filled in, click `ดาวน์โหลดโมเดล`. The downloaded model can be selected in the `สร้างเพลง` tab after clicking the refresh models button.
+Once the two input fields are filled in, click `⬇️ ดาวน์โหลดโมเดล`. The installed model can be selected in the `🎵 สตูดิโอสร้างเพลง (Main Studio)` tab; use the refresh button if the model list has not updated.
 
 ### Upload RVC models via WebUI
 
 ![](images/webui_upload_model.png?raw=true)
 
 For people who have trained RVC v2 models locally and would like to use them for AI Cover generations.
-Navigate to the `เพิ่มโมเดลจากเครื่อง` tab, select the ZIP file and enter a model name. The uploaded model can be selected in the `สร้างเพลง` tab after clicking the refresh models button!
+Open `📦 จัดการโมเดลเสียง (Model Hub)` → `📤 อัปโหลดจากเครื่อง (.zip)`, select the ZIP file, and enter a model name. The archive must contain exactly one `.pth` model file and may contain one `.index` file. The installed model can then be selected in the Studio; refresh the model list if needed.
 
 
 ### Running the pipeline via WebUI
 
 ![](images/webui_generate.png?raw=true)
 
-- Under `1 · เพลงและเสียงร้อง`, select the voice model and enter a YouTube link or local audio path. You can also upload an audio file from your computer.
-- Use `2 · ปรับเสียง AI` and `3 · มิกซ์เสียงและส่งออก` to tune conversion, mix, and output settings. The defaults are intended for general use.
+- In `🎵 สตูดิโอสร้างเพลง (Main Studio)`, choose a voice model and provide a YouTube URL, a local audio path, or an uploaded audio file.
+- Adjust pitch and optional voice-tuning, mixer, reverb, and export settings in the expandable sections. Defaults are intended for general use.
 
-Click `สร้าง AI Cover` to start. Processing time depends on your GPU and audio duration.
+Click `⚡ เริ่มสร้าง AI Cover` to start. The generated audio appears in the result panel and can be played or downloaded. Processing time depends on your GPU and audio duration; keep the WebUI session running until processing completes.
 
 ## Usage with CLI
 

@@ -19,13 +19,217 @@ rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
 output_dir = os.path.join(BASE_DIR, 'song_output')
 
 CUSTOM_CSS = """
-.gradio-container {max-width: 1180px !important; margin: 0 auto !important;}
-.app-header {padding: 22px 26px; margin-bottom: 18px; border-radius: 16px;
-    background: linear-gradient(120deg, #38206f, #6545ad 62%, #985fba); color: white;}
-.app-header h1 {margin: 0 0 6px; font-size: 28px; color: #fff !important;}
-.app-header p {margin: 0; opacity: .9; color: #fff !important;}
-.primary-action {min-height: 48px; font-size: 16px !important; font-weight: 700 !important;}
-footer {visibility: hidden;}
+/* Font & Global Setup */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+body, .gradio-container {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+    background-color: #F8F9FD !important;
+}
+
+.gradio-container {
+    max-width: 1280px !important;
+    margin: 0 auto !important;
+    padding: 24px !important;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Keyframes Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowPulse {
+    0% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.08); }
+    100% { opacity: 0.3; transform: scale(1); }
+}
+
+@keyframes shine {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+/* Fantasy Purple Header Banner */
+.app-header {
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #1E1035 0%, #3B1C66 45%, #6B21A8 80%, #9333EA 100%);
+    color: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 36px -8px rgba(107, 33, 168, 0.3);
+    border: 1px solid rgba(192, 132, 252, 0.35);
+}
+
+.app-header::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -10%;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.5) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none;
+    animation: glowPulse 4s infinite ease-in-out;
+}
+
+.app-header h1 {
+    margin: 0 0 6px;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #FFFFFF !important;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+.app-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #E9D5FF !important;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+}
+
+/* Tab Navigation with Animated Indicator */
+.tabs {
+    background: transparent !important;
+    border: none !important;
+}
+
+.tab-nav {
+    border-bottom: 2px solid #E9D5FF !important;
+    gap: 8px;
+    margin-bottom: 20px !important;
+}
+
+.tab-nav button {
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    color: #6B7280 !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 12px 24px !important;
+    border: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.tab-nav button:hover {
+    color: #7C3AED !important;
+    background: rgba(233, 213, 255, 0.35) !important;
+}
+
+.tab-nav button.selected {
+    color: #7C3AED !important;
+    border-bottom: 3px solid #7C3AED !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 -4px 16px rgba(124, 58, 237, 0.12) !important;
+}
+
+/* Cards & Panels with Hover Lift */
+.block, .form, .panel, accordion {
+    background: #FFFFFF !important;
+    border-radius: 16px !important;
+    border: 1.5px solid #E9D5FF !important;
+    box-shadow: 0 4px 16px -2px rgba(124, 58, 237, 0.04) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.block:hover {
+    border-color: #C084FC !important;
+    box-shadow: 0 8px 28px -4px rgba(124, 58, 237, 0.15) !important;
+    transform: translateY(-2px);
+}
+
+/* Inputs, Textboxes, Dropdowns */
+input[type="text"], textarea, select, .gr-box, .gr-input {
+    border-radius: 10px !important;
+    border: 1.5px solid #E9D5FF !important;
+    background-color: #FAFAFE !important;
+    color: #1F2937 !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: #8B5CF6 !important;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.18) !important;
+    background-color: #FFFFFF !important;
+}
+
+/* Primary Button with Shine Effect & Glow */
+button.primary-action, .primary-btn, button.primary {
+    background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    padding: 14px 28px !important;
+    box-shadow: 0 6px 18px rgba(124, 58, 237, 0.35) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+button.primary-action::after, .primary-btn::after, button.primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: none;
+}
+
+button.primary-action:hover::after, .primary-btn:hover::after, button.primary:hover::after {
+    animation: shine 0.85s ease-in-out;
+}
+
+button.primary-action:hover, .primary-btn:hover, button.primary:hover {
+    transform: translateY(-3px) scale(1.01) !important;
+    box-shadow: 0 10px 25px rgba(124, 58, 237, 0.5) !important;
+    background: linear-gradient(135deg, #6D28D9 0%, #7E22CE 100%) !important;
+}
+
+button.primary-action:active, .primary-btn:active, button.primary:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+/* Secondary Button Styling */
+button.secondary-btn, .clear-btn {
+    border: 1.5px solid #D8B4FE !important;
+    color: #7C3AED !important;
+    background: #FFFFFF !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+button.secondary-btn:hover, .clear-btn:hover {
+    background: #F3E8FF !important;
+    border-color: #A855F7 !important;
+    transform: translateY(-1px);
+}
+
+/* Highlighted Result Box */
+.result-box {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBF8FF 100%) !important;
+    border: 2px solid #C084FC !important;
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.12) !important;
+    transition: all 0.3s ease !important;
+}
+
+footer {
+    visibility: hidden;
+}
 """
 
 
@@ -185,206 +389,187 @@ if __name__ == '__main__':
     with open(os.path.join(rvc_models_dir, 'public_models.json'), encoding='utf8') as infile:
         public_models = json.load(infile)
 
-    with gr.Blocks(title='AICoverGen | สร้าง AI Cover') as app:
+    with gr.Blocks(title='AICoverGen Studio | AI Cover Music Generator', css=CUSTOM_CSS) as app:
         gr.Markdown(
-            '<div class="app-header"><h1>🎙️ AICoverGen</h1>'
-            '<p>สร้างเพลงคัฟเวอร์ด้วย AI Voice แยกตั้งค่าเป็นหมวด ใช้งานได้ง่ายในไม่กี่ขั้นตอน</p></div>'
+            '<div class="app-header">'
+            '<h1>✨ AICoverGen <span style="font-size:14px; font-weight:700; background:rgba(255,255,255,0.2); padding:3px 10px; border-radius:12px;">STUDIO PRO</span></h1>'
+            '<p>เนรมิตเพลงคัฟเวอร์ด้วย AI เสียงที่คุณต้องการ จัดแต่งง่ายและจบในที่เดียว</p>'
+            '</div>'
         )
 
-        with gr.Tab('สร้างเพลง'):
-            with gr.Tabs():
-                with gr.Tab('1 · เพลงและเสียงร้อง'):
-                    gr.Markdown('เลือกเสียงร้องต้นฉบับและโมเดลเสียงที่ต้องการ')
-                    with gr.Row():
-                        with gr.Column(scale=2):
-                            rvc_model = gr.Dropdown(
-                                voice_models, label='โมเดลเสียง AI',
-                                info='กดรีเฟรชหลังเพิ่มโมเดลลงในโฟลเดอร์ rvc_models'
-                            )
-                            ref_btn = gr.Button('รีเฟรชรายการโมเดล')
-                        with gr.Column(scale=3):
+        with gr.Tabs():
+            # MAIN STUDIO TAB
+            with gr.Tab('🎵 สตูดิโอสร้างเพลง (Main Studio)'):
+                with gr.Row():
+                    # LEFT SIDE: INPUTS & SETTINGS
+                    with gr.Column(scale=3):
+                        with gr.Group():
+                            gr.Markdown('### 1️⃣ เลือกโมเดลเสียง & แหล่งที่มาเพลง')
+                            with gr.Row():
+                                rvc_model = gr.Dropdown(
+                                    voice_models, label='🎭 เลือกโมเดลเสียง AI (Voice Model)',
+                                    info='กดรีเฟรชเมื่อมีการเพิ่มโมเดลใหม่', scale=4
+                                )
+                                ref_btn = gr.Button('🔄', elem_classes=['secondary-btn'], scale=1)
+
                             with gr.Column() as yt_link_col:
                                 song_input = gr.Textbox(
-                                    label='ลิงก์ YouTube หรือพาธไฟล์เสียง',
-                                    placeholder='วางลิงก์ YouTube หรือพาธไฟล์ .wav / .mp3',
-                                    info='หรือเลือกอัปโหลดไฟล์เสียงจากเครื่อง'
+                                    label='🔗 ลิงก์ YouTube หรือ Path ไฟล์ในเครื่อง',
+                                    placeholder='วางลิงก์ YouTube หรือระบุ Path ไฟล์ .wav / .mp3'
                                 )
-                                show_file_upload_button = gr.Button('อัปโหลดไฟล์จากเครื่อง')
+                                show_file_upload_button = gr.Button('📁 เปลี่ยนเป็นอัปโหลดไฟล์ตรง', elem_classes=['secondary-btn'])
+
                             with gr.Column(visible=False) as file_upload_col:
-                                local_file = gr.File(label='ไฟล์เสียงที่เลือก')
+                                local_file = gr.File(label='📄 ไฟล์เสียงที่อัปโหลด')
                                 song_input_file = gr.UploadButton(
-                                    'เลือกไฟล์เสียง', file_types=['audio'], variant='primary'
+                                    '📤 เลือกไฟล์เสียงจากอุปกรณ์', file_types=['audio'], variant='primary', elem_classes=['primary-btn']
                                 )
-                                show_yt_link_button = gr.Button('กลับไปใช้ลิงก์หรือพาธไฟล์')
+                                show_yt_link_button = gr.Button('🔗 กลับไปใช้ลิงก์/Path', elem_classes=['secondary-btn'])
                                 song_input_file.upload(
                                     process_file_upload, inputs=[song_input_file],
                                     outputs=[local_file, song_input]
                                 )
-                    with gr.Row():
-                        pitch = gr.Slider(
-                            -3, 3, value=0, step=1, label='ปรับคีย์เสียงร้อง AI (อ็อกเทฟ)',
-                            info='โดยทั่วไปใช้ +1 เมื่อต้องการเสียงหญิง หรือ -1 สำหรับเสียงชาย'
+
+                        with gr.Group():
+                            gr.Markdown('### 2️⃣ ปรับระดับคีย์เสียง (Pitch Control)')
+                            with gr.Row():
+                                pitch = gr.Slider(
+                                    -3, 3, value=0, step=1, label='🎼 คีย์เสียงร้อง AI (Octaves)',
+                                    info='+1 เสียงหญิง | -1 เสียงชาย'
+                                )
+                                pitch_all = gr.Slider(
+                                    -12, 12, value=0, step=1, label='🎶 คีย์เพลงทั้งหมด (Semitones)',
+                                    info='ปรับพร้อมกันทั้งดนตรีและเสียงร้อง'
+                                )
+
+                        # Accordion Settings Categorization
+                        with gr.Accordion('⚙️ ปรับแต่งเสียง AI แบบละเอียด (Voice Tuning)', open=False):
+                            with gr.Row():
+                                index_rate = gr.Slider(0, 1, value=0.5, label='🎯 Index Rate (ความคล้ายโมเดล)')
+                                filter_radius = gr.Slider(0, 7, value=3, step=1, label='🧹 Filter Radius (ลดเสียงพร่า)')
+                            with gr.Row():
+                                rms_mix_rate = gr.Slider(0, 1, value=0.25, label='🔊 RMS Mix Rate (คงระดับเสียงเดิม)')
+                                protect = gr.Slider(0, 0.5, value=0.33, label='🛡️ Protect Breath (รักษาลมหายใจ)')
+                            with gr.Row():
+                                f0_method = gr.Dropdown(
+                                    ['rmvpe', 'mangio-crepe'], value='rmvpe', label='🔍 F0 Method (ตรวจจับระดับเสียง)'
+                                )
+                                crepe_hop_length = gr.Slider(
+                                    32, 320, value=128, step=1, visible=False, label='⏱️ Crepe Hop Length'
+                                )
+                                f0_method.change(show_hop_slider, inputs=f0_method, outputs=crepe_hop_length)
+
+                        with gr.Accordion('🎚️ มิกเซอร์ระดับเสียง (Audio Mixer)', open=False):
+                            with gr.Row():
+                                main_gain = gr.Slider(-20, 20, value=0, step=1, label='🎤 เสียงร้องหลัก AI (dB)')
+                                backup_gain = gr.Slider(-20, 20, value=0, step=1, label='👥 เสียงร้องประสาน (dB)')
+                                inst_gain = gr.Slider(-20, 20, value=0, step=1, label='🎸 เสียงดนตรี (dB)')
+
+                        with gr.Accordion('🔮 เอฟเฟกต์มิติเสียง (Reverb Studio)', open=False):
+                            with gr.Row():
+                                reverb_rm_size = gr.Slider(0, 1, value=0.15, label='🏛️ Room Size')
+                                reverb_wet = gr.Slider(0, 1, value=0.2, label='💧 Wet (เสียงก้อง)')
+                            with gr.Row():
+                                reverb_dry = gr.Slider(0, 1, value=0.8, label='🎙 Dry (เสียงตรง)')
+                                reverb_damping = gr.Slider(0, 1, value=0.7, label='🔇 Damping (ซับความถี่สูง)')
+
+                        with gr.Accordion('🎼 ตั้งค่าการส่งออก (Export Option)', open=False):
+                            output_format = gr.Radio(
+                                ['mp3', 'wav'], value='mp3', label='รูปแบบไฟล์ผลลัพธ์ (Format)'
+                            )
+                            keep_files = gr.Checkbox(
+                                label='💾 บันทึกไฟล์เสียงแยก (ร้อง/ดนตรี) ลงในโฟลเดอร์ song_output'
+                            )
+
+                    # RIGHT SIDE: OUTPUT & ACTION
+                    with gr.Column(scale=2):
+                        with gr.Group(elem_classes=['result-box']):
+                            gr.Markdown('### 🎧 เครื่องมือประมวลผล & ผลลัพธ์')
+                            generate_btn = gr.Button(
+                                '⚡ เริ่มสร้าง AI Cover', variant='primary', elem_classes=['primary-action']
+                            )
+                            clear_btn = gr.ClearButton(
+                                value='🧹 ล้างค่าทั้งหมด', components=[song_input, rvc_model, keep_files, local_file],
+                                elem_classes=['clear-btn']
+                            )
+                            ai_cover = gr.Audio(label='🎵 เพลง AI Cover ที่เสร็จสมบูรณ์', buttons=['download'])
+
+            # MODEL MANAGEMENT HUB TAB
+            with gr.Tab('📦 จัดการโมเดลเสียง (Model Hub)'):
+                with gr.Tabs():
+                    with gr.Tab('🔗 ดาวน์โหลดผ่าน Direct URL'):
+                        gr.Markdown('#### 🌐 โหลดโมเดลผ่านลิงก์ ZIP โดยตรง')
+                        with gr.Row():
+                            model_zip_link = gr.Textbox(label='🔗 ลิงก์ไฟล์ ZIP โมเดล')
+                            model_name = gr.Textbox(label='🏷️ ตั้งชื่อโมเดลใหม่')
+                        download_btn = gr.Button('⬇️ ดาวน์โหลดโมเดล', variant='primary', elem_classes=['primary-action'])
+                        dl_output_message = gr.Textbox(label='📌 สถานะ', interactive=False)
+                        download_btn.click(download_online_model, inputs=[model_zip_link, model_name], outputs=dl_output_message)
+
+                        gr.Markdown('##### 💡 ตัวอย่างลิงก์โมเดลสำเร็จรูป')
+                        gr.Examples(
+                            [
+                                ['https://huggingface.co/phant0m4r/LiSA/resolve/main/LiSA.zip', 'Lisa'],
+                                ['https://pixeldrain.com/u/3tJmABXA', 'Gura'],
+                                ['https://huggingface.co/Kit-Lemonfoot/kitlemonfoot_rvc_models/resolve/main/AZKi%20(Hybrid).zip', 'Azki']
+                            ],
+                            [model_zip_link, model_name],
+                            [],
+                            download_online_model,
                         )
-                        pitch_all = gr.Slider(
-                            -12, 12, value=0, step=1, label='ปรับคีย์เพลงทั้งหมด (เซมิโทน)',
-                            info='เปลี่ยนคีย์ทั้งเสียงร้องและดนตรี อาจลดคุณภาพเสียงเล็กน้อย'
+
+                    with gr.Tab('🌐 ค้นหาจากคลังสาธารณะ (Public Hub)'):
+                        gr.Markdown('#### 🔍 เลือกโมเดลฟรีจากคลังระบบ')
+                        with gr.Row():
+                            pub_zip_link = gr.Textbox(label='🔗 URL โมเดลที่เลือก')
+                            pub_model_name = gr.Textbox(label='🏷️ ชื่อโมเดลที่เลือก')
+                        download_pub_btn = gr.Button('⬇️ ติดตั้งโมเดลที่เลือก', variant='primary', elem_classes=['primary-action'])
+                        pub_dl_output_message = gr.Textbox(label='📌 สถานะการติดตั้ง', interactive=False)
+
+                        filter_tags = gr.CheckboxGroup(value=[], label='🏷️ กรองตามแท็ก', choices=[])
+                        search_query = gr.Textbox(label='🔍 ค้นหาชื่อ/คำอธิบาย')
+                        load_public_models_button = gr.Button('🔄 ดึงรายการโมเดลสาธารณะทั้งหมด', elem_classes=['secondary-btn'])
+
+                        public_models_table = gr.DataFrame(
+                            value=[], headers=['ชื่อโมเดล', 'รายละเอียด', 'เครดิต', 'URL', 'แท็ก'],
+                            label='📋 โมเดลที่พร้อมติดตั้ง', interactive=False
                         )
-                    show_file_upload_button.click(
-                        swap_visibility, outputs=[file_upload_col, yt_link_col, song_input, local_file]
-                    )
-                    show_yt_link_button.click(
-                        swap_visibility, outputs=[yt_link_col, file_upload_col, song_input, local_file]
-                    )
 
-                with gr.Tab('2 · ปรับเสียง AI'):
-                    gr.Markdown('ปรับคุณภาพการแปลงเสียง · ค่าเริ่มต้นเหมาะกับการใช้งานทั่วไป')
-                    with gr.Row():
-                        index_rate = gr.Slider(
-                            0, 1, value=0.5, label='ความคล้ายโทนเสียง (Index rate)',
-                            info='ค่าสูงขึ้นจะยึดโทนเสียงของโมเดลมากขึ้น'
-                        )
-                        filter_radius = gr.Slider(
-                            0, 7, value=3, step=1, label='ลดเสียงพร่า (Filter radius)',
-                            info='ตั้งแต่ 3 ขึ้นไปจะช่วยกรองการสั่นของระดับเสียง'
-                        )
-                    with gr.Row():
-                        rms_mix_rate = gr.Slider(
-                            0, 1, value=0.25, label='รักษาความดังเดิม (RMS mix rate)',
-                            info='0 ใช้ความดังต้นฉบับ · 1 ใช้ความดังมาตรฐาน'
-                        )
-                        protect = gr.Slider(
-                            0, 0.5, value=0.33, label='ปกป้องลมหายใจและเสียงพยัญชนะ',
-                            info='ตั้ง 0.5 เพื่อปิดการปกป้อง'
-                        )
-                    with gr.Row():
-                        f0_method = gr.Dropdown(
-                            ['rmvpe', 'mangio-crepe'], value='rmvpe',
-                            label='วิธีตรวจจับระดับเสียง',
-                            info='RMVPE ชัดเจน · Mangio-Crepe ให้เสียงนุ่มขึ้น'
-                        )
-                        crepe_hop_length = gr.Slider(
-                            32, 320, value=128, step=1, visible=False,
-                            label='Crepe hop length',
-                            info='ค่าน้อยลงเพิ่มความละเอียดแต่ใช้เวลาประมวลผลมากขึ้น'
-                        )
-                        f0_method.change(
-                            show_hop_slider, inputs=f0_method, outputs=crepe_hop_length
-                        )
-                    keep_files = gr.Checkbox(
-                        label='เก็บไฟล์เสียงระหว่างประมวลผล',
-                        info='เก็บไฟล์เสียงร้อง/ดนตรีที่แยกแล้วไว้ใน song_output ใช้พื้นที่เพิ่ม'
-                    )
+                        public_models_table.select(pub_dl_autofill, inputs=[public_models_table], outputs=[pub_zip_link, pub_model_name])
+                        load_public_models_button.click(load_public_models, outputs=[public_models_table, filter_tags])
+                        search_query.change(filter_models, inputs=[filter_tags, search_query], outputs=public_models_table)
+                        filter_tags.change(filter_models, inputs=[filter_tags, search_query], outputs=public_models_table)
+                        download_pub_btn.click(download_online_model, inputs=[pub_zip_link, pub_model_name], outputs=pub_dl_output_message)
 
-                with gr.Tab('3 · มิกซ์เสียงและส่งออก'):
-                    gr.Markdown('กำหนดระดับเสียง เอฟเฟกต์ และรูปแบบไฟล์ผลลัพธ์')
-                    gr.Markdown('#### ระดับเสียง (dB)')
-                    with gr.Row():
-                        main_gain = gr.Slider(-20, 20, value=0, step=1, label='เสียงร้องหลัก AI')
-                        backup_gain = gr.Slider(-20, 20, value=0, step=1, label='เสียงร้องประสาน')
-                        inst_gain = gr.Slider(-20, 20, value=0, step=1, label='ดนตรี')
-                    gr.Markdown('#### Reverb สำหรับเสียงร้อง AI')
-                    with gr.Row():
-                        reverb_rm_size = gr.Slider(0, 1, value=0.15, label='ขนาดห้อง')
-                        reverb_wet = gr.Slider(0, 1, value=0.2, label='เสียงก้อง (Wet)')
-                        reverb_dry = gr.Slider(0, 1, value=0.8, label='เสียงตรง (Dry)')
-                        reverb_damping = gr.Slider(0, 1, value=0.7, label='ลดความถี่สูง')
-                    output_format = gr.Radio(
-                        ['mp3', 'wav'], value='mp3', label='รูปแบบไฟล์',
-                        info='MP3 ขนาดเล็ก · WAV คุณภาพสูงและไฟล์ใหญ่'
-                    )
+                    with gr.Tab('📤 อัปโหลดจากเครื่อง (.zip)'):
+                        gr.Markdown('#### 📦 เพิ่มโมเดลด้วยไฟล์ ZIP จากเครื่องของคุณ')
+                        with gr.Row():
+                            zip_file = gr.File(label='📂 เลือกไฟล์โมเดล ZIP', file_types=['.zip'])
+                            local_model_name = gr.Textbox(label='🏷 ตั้งชื่อโมเดล')
+                        model_upload_button = gr.Button('📤 ติดตั้งโมเดลเข้าสู่ระบบ', variant='primary', elem_classes=['primary-action'])
+                        local_upload_output_message = gr.Textbox(label='📌 สถานะ', interactive=False)
+                        model_upload_button.click(upload_local_model, inputs=[zip_file, local_model_name], outputs=local_upload_output_message)
 
-            with gr.Row():
-                clear_btn = gr.ClearButton(
-                    value='ล้างผลลัพธ์', components=[song_input, rvc_model, keep_files, local_file]
-                )
-                generate_btn = gr.Button(
-                    'สร้าง AI Cover', variant='primary', elem_classes=['primary-action']
-                )
-            ai_cover = gr.Audio(label='เพลง AI Cover ที่สร้างเสร็จ', buttons=['download'])
+        # Event Handlers & Binding
+        ref_btn.click(update_models_list, None, outputs=rvc_model)
+        show_file_upload_button.click(swap_visibility, outputs=[file_upload_col, yt_link_col, song_input, local_file])
+        show_yt_link_button.click(swap_visibility, outputs=[yt_link_col, file_upload_col, song_input, local_file])
 
-            ref_btn.click(update_models_list, None, outputs=rvc_model)
-            is_webui = gr.Number(value=1, visible=False)
-            generate_btn.click(song_cover_pipeline,
-                               inputs=[song_input, rvc_model, pitch, keep_files, is_webui, main_gain, backup_gain,
-                                       inst_gain, index_rate, filter_radius, rms_mix_rate, f0_method, crepe_hop_length,
-                                       protect, pitch_all, reverb_rm_size, reverb_wet, reverb_dry, reverb_damping,
-                                       output_format],
-                               outputs=[ai_cover])
-            clear_btn.click(lambda: [0, 0, 0, 0, 0.5, 3, 0.25, 0.33, 'rmvpe', 128, 0, 0.15, 0.2, 0.8, 0.7, 'mp3', None],
-                            outputs=[pitch, main_gain, backup_gain, inst_gain, index_rate, filter_radius, rms_mix_rate,
-                                     protect, f0_method, crepe_hop_length, pitch_all, reverb_rm_size, reverb_wet,
-                                     reverb_dry, reverb_damping, output_format, ai_cover])
-
-        # Download tab
-        with gr.Tab('ดาวน์โหลดโมเดล'):
-
-            with gr.Tab('ดาวน์โหลดจากลิงก์'):
-                gr.Markdown('ดาวน์โหลดไฟล์ ZIP ที่มีไฟล์โมเดล `.pth` และไฟล์ดัชนี `.index` (ถ้ามี)')
-                with gr.Row():
-                    model_zip_link = gr.Textbox(label='ลิงก์ไฟล์โมเดล ZIP')
-                    model_name = gr.Textbox(label='ตั้งชื่อโมเดล', info='ต้องไม่ซ้ำกับโมเดลที่มีอยู่')
-
-                with gr.Row():
-                    download_btn = gr.Button('ดาวน์โหลดโมเดล', variant='primary', scale=19)
-                    dl_output_message = gr.Textbox(label='สถานะ', interactive=False, scale=20)
-
-                download_btn.click(download_online_model, inputs=[model_zip_link, model_name], outputs=dl_output_message)
-
-                gr.Markdown('ตัวอย่างลิงก์')
-                gr.Examples(
-                    [
-                        ['https://huggingface.co/phant0m4r/LiSA/resolve/main/LiSA.zip', 'Lisa'],
-                        ['https://pixeldrain.com/u/3tJmABXA', 'Gura'],
-                        ['https://huggingface.co/Kit-Lemonfoot/kitlemonfoot_rvc_models/resolve/main/AZKi%20(Hybrid).zip', 'Azki']
-                    ],
-                    [model_zip_link, model_name],
-                    [],
-                    download_online_model,
-                )
-
-            with gr.Tab('คลังโมเดลสาธารณะ'):
-
-                gr.Markdown('กดโหลดรายการ ค้นหาหรือกรองด้วยแท็ก แล้วเลือกแถวโมเดลเพื่อเติมลิงก์ดาวน์โหลดอัตโนมัติ')
-
-                with gr.Row():
-                    pub_zip_link = gr.Textbox(label='ลิงก์ดาวน์โหลด')
-                    pub_model_name = gr.Textbox(label='ชื่อโมเดล')
-
-                with gr.Row():
-                    download_pub_btn = gr.Button('ดาวน์โหลดโมเดล', variant='primary', scale=19)
-                    pub_dl_output_message = gr.Textbox(label='สถานะ', interactive=False, scale=20)
-
-                filter_tags = gr.CheckboxGroup(value=[], label='กรองตามแท็ก', choices=[])
-                search_query = gr.Textbox(label='ค้นหาโมเดล')
-                load_public_models_button = gr.Button(value='โหลดรายการโมเดล', variant='primary')
-
-                public_models_table = gr.DataFrame(
-                    value=[], headers=['ชื่อโมเดล', 'รายละเอียด', 'เครดิต', 'URL', 'แท็ก'],
-                    label='โมเดลที่ติดตั้งได้', interactive=False
-                )
-                public_models_table.select(pub_dl_autofill, inputs=[public_models_table], outputs=[pub_zip_link, pub_model_name])
-                load_public_models_button.click(load_public_models, outputs=[public_models_table, filter_tags])
-                search_query.change(filter_models, inputs=[filter_tags, search_query], outputs=public_models_table)
-                filter_tags.change(filter_models, inputs=[filter_tags, search_query], outputs=public_models_table)
-                download_pub_btn.click(download_online_model, inputs=[pub_zip_link, pub_model_name], outputs=pub_dl_output_message)
-
-        # Upload tab
-        with gr.Tab('เพิ่มโมเดลจากเครื่อง'):
-            gr.Markdown(
-                'บีบอัดไฟล์โมเดล `.pth` (และ `.index` หากมี) เป็น ZIP '
-                'จากนั้นเลือกไฟล์และตั้งชื่อโมเดลที่ไม่ซ้ำ'
-            )
-
-            with gr.Row():
-                with gr.Column():
-                    zip_file = gr.File(label='ไฟล์โมเดล ZIP', file_types=['.zip'])
-
-                local_model_name = gr.Textbox(label='ชื่อโมเดล')
-
-            with gr.Row():
-                model_upload_button = gr.Button('เพิ่มโมเดล', variant='primary', scale=19)
-                local_upload_output_message = gr.Textbox(label='สถานะ', interactive=False, scale=20)
-                model_upload_button.click(upload_local_model, inputs=[zip_file, local_model_name], outputs=local_upload_output_message)
+        is_webui = gr.Number(value=1, visible=False)
+        generate_btn.click(
+            song_cover_pipeline,
+            inputs=[song_input, rvc_model, pitch, keep_files, is_webui, main_gain, backup_gain,
+                    inst_gain, index_rate, filter_radius, rms_mix_rate, f0_method, crepe_hop_length,
+                    protect, pitch_all, reverb_rm_size, reverb_wet, reverb_dry, reverb_damping,
+                    output_format],
+            outputs=[ai_cover]
+        )
+        clear_btn.click(
+            lambda: [0, 0, 0, 0, 0.5, 3, 0.25, 0.33, 'rmvpe', 128, 0, 0.15, 0.2, 0.8, 0.7, 'mp3', None],
+            outputs=[pitch, main_gain, backup_gain, inst_gain, index_rate, filter_radius, rms_mix_rate,
+                     protect, f0_method, crepe_hop_length, pitch_all, reverb_rm_size, reverb_wet,
+                     reverb_dry, reverb_damping, output_format, ai_cover]
+        )
 
     app.queue()
     app.launch(
