@@ -1,0 +1,24 @@
+# Python 3.10 / CUDA 12.1 profile. Install pip<24.1 first for Fairseq's legacy metadata.
+faiss-cpu==1.15.1
+ffmpeg-python==0.2.0
+gradio==6.29.1
+Cython==0.29.37
+librosa==0.11.0
+numpy==1.26.4
+onnxruntime-gpu==1.20.0
+praat-parselmouth==0.4.7
+pedalboard==0.9.25
+pydub==0.25.1
+pyworld==0.3.5
+Requests==2.34.2
+scipy==1.15.3
+setuptools<81
+soundfile==0.14.0
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.5.1+cu121
+torchaudio==2.5.1+cu121
+torchcrepe==0.0.24
+tqdm==4.70.1
+yt_dlp==2026.8.19
+sox==1.5.0
+fairseq==0.12.2
