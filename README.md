@@ -5,9 +5,7 @@ Showcase: https://www.youtube.com/watch?v=2qZuE4WM7CM
 
 Setup Guide: https://www.youtube.com/watch?v=pdlhk4vVHQk
 
-![](images/webui_generate.png?raw=true)
-
-WebUI is under constant development and testing, but you can try it out right now on both local and colab!
+The WebUI groups song generation in the Studio and voice-model downloads/uploads in the Model Hub. It is available for local and Colab use.
 
 ## Table of Contents
 
@@ -138,8 +136,6 @@ Once the following output message `Running on local URL:  http://127.0.0.1:7860`
 
 ### Download RVC models via WebUI
 
-![](images/webui_dl_model.png?raw=true)
-
 Open `📦 จัดการโมเดลเสียง (Model Hub)` and choose `🔗 ดาวน์โหลดผ่าน Direct URL`. Paste a direct ZIP download link for the RVC model and give it a unique name.
 You may search the [AI Hub Discord](https://discord.gg/aihub) where already trained voice models are available for download. You may refer to the examples for how the download link should look like.
 The ZIP archive must contain exactly one `.pth` model file and may contain one `.index` file.
@@ -148,15 +144,11 @@ Once the two input fields are filled in, click `⬇️ ดาวน์โหล�
 
 ### Upload RVC models via WebUI
 
-![](images/webui_upload_model.png?raw=true)
-
 For people who have trained RVC v2 models locally and would like to use them for AI Cover generations.
 Open `📦 จัดการโมเดลเสียง (Model Hub)` → `📤 อัปโหลดจากเครื่อง (.zip)`, select the ZIP file, and enter a model name. The archive must contain exactly one `.pth` model file and may contain one `.index` file. The installed model can then be selected in the Studio; refresh the model list if needed.
 
 
 ### Running the pipeline via WebUI
-
-![](images/webui_generate.png?raw=true)
 
 - In `🎵 สตูดิโอสร้างเพลง (Main Studio)`, choose a voice model and provide a YouTube URL, a local audio path, or an uploaded audio file.
 - Adjust pitch and optional voice-tuning, mixer, reverb, and export settings in the expandable sections. Defaults are intended for general use.
