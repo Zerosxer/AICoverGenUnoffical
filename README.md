@@ -1,9 +1,10 @@
-# AICoverGen
-An autonomous pipeline to create covers with any RVC v2 trained AI voice from YouTube videos or a local audio file. For developers who may want to add a singing functionality into their AI assistant/chatbot/vtuber, or for people who want to hear their favourite characters sing their favourite song.
+# AICoverGen Unofficial Edition
 
-Showcase: https://www.youtube.com/watch?v=2qZuE4WM7CM
+A community-maintained edition of AICoverGen for creating AI covers with RVC v2 voice models from YouTube videos or local audio files. It includes a categorized Studio and Model Hub, updated dependency pins, and setup guidance for local and hosted notebook environments.
 
-Setup Guide: https://www.youtube.com/watch?v=pdlhk4vVHQk
+This is an unofficial community project and is not affiliated with the original AICoverGen authors.
+
+Original project showcase (legacy UI): https://www.youtube.com/watch?v=2qZuE4WM7CM
 
 The WebUI groups song generation in the Studio and voice-model downloads/uploads in the Model Hub. It is available for local and Colab use.
 
@@ -13,7 +14,7 @@ The WebUI groups song generation in the Studio and voice-model downloads/uploads
 - [Setup](#setup)
     - [Install Git and Python](#install-git-and-python)
     - [Install ffmpeg and sox](#install-ffmpeg)
-    - [Clone AICoverGen repository](#clone-aicovergen-repository)
+    - [Clone the repository](#clone-the-repository)
     - [Download required models](#download-required-models)
 - [Usage with WebUI](#usage-with-webui)
     - [Download RVC models via WebUI](#download-rvc-models-via-webui)
@@ -45,9 +46,9 @@ The WebUI groups song generation in the Studio and voice-model downloads/uploads
 - Pitch change for vocals and instrumentals together. Same effect as changing key of song in Karaoke.
 - Audio output format option: wav or mp3.
 
-## Update AICoverGen to latest version
+## Update AICoverGen Unofficial Edition
 
-Install and pull any new requirements and changes by opening a command line window in the `AICoverGen` directory and running the following commands.
+Pull the latest changes and install any updated requirements from the `AICoverGenUnoffical` directory:
 
 ```
 git pull
@@ -55,14 +56,15 @@ python -m pip install "pip<24.1"
 pip install -r requirements.txt
 ```
 
-For colab users, simply click `Runtime` in the top navigation bar of the colab notebook and `Disconnect and delete runtime` in the dropdown menu. 
-Then follow the instructions in the notebook to run the webui.
+On Colab, use `Runtime` → `Disconnect and delete runtime`, then reopen the notebook linked below and select `Runtime` → `Run all`.
 
 ## Colab notebook
 
-For those without a powerful enough NVIDIA GPU, you may try AICoverGen out using Google Colab.
+For those without a powerful enough NVIDIA GPU, try AICoverGen Unofficial Edition using Google Colab.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Zerosxer/AICoverGenUnoffical/blob/main/AICoverGen_colab.ipynb)
+
+The notebook clones this public repository, creates a Python 3.10 environment, installs compatible dependencies, downloads required models, and starts the WebUI with a temporary Gradio share link. Keep the notebook session running while using the link.
 
 For those who face issues with Google Colab notebook disconnecting after a few minutes, here's an alternative that doesn't use the WebUI.
 
@@ -86,13 +88,13 @@ Follow the instructions [here](https://www.tutorialexample.com/a-step-guide-to-i
 
 ### Dependency compatibility
 
-The supported local and Cog environment uses Python 3.10, CUDA 12.1, and the pinned packages in `requirements.txt`. The WebUI uses Gradio 6. RVC's HuBERT checkpoint loader still depends on Fairseq 0.12.2; its legacy OmegaConf metadata requires pip older than 24.1 and Cython 0.29 during installation. The project pins both and installs the compatible pip version first. Inference uses PyTorch 2.5.1 because newer PyTorch releases change checkpoint loading defaults used by Fairseq. ONNX Runtime 1.20 is pinned to match this CUDA/cuDNN runtime; newer ONNX Runtime builds require newer CUDA toolkits. The remaining audio/UI dependencies are upgraded and pinned together. CPU inference is supported but significantly slower; an NVIDIA GPU with a CUDA 12.1-compatible driver is recommended. The MDX separator uses ONNX Runtime's CUDA provider when available and otherwise reports that it is using CPU.
+The supported local and Cog environment uses Python 3.10, CUDA 12.1, and the pinned packages in `requirements.txt`. The WebUI uses Gradio 6. RVC's HuBERT checkpoint loader still depends on Fairseq 0.12.2; its legacy OmegaConf metadata requires pip older than 24.1 and Cython 0.29 during installation. The project pins both and installs the compatible pip version first. Inference uses PyTorch 2.5.1 because newer PyTorch releases change checkpoint loading defaults used by Fairseq. ONNX Runtime 1.20 is pinned to match this CUDA/cuDNN runtime; newer ONNX Runtime builds require newer CUDA toolkits. The remaining audio/UI dependencies are upgraded and pinned together. CPU inference is supported but significantly slower; an NVIDIA GPU with a CUDA 12.1-compatible driver is recommended. The MDX separator uses ONNX Runtime's CUDA provider when available and otherwise reports that it is using CPU. The Colab notebook installs the PyPI CUDA-enabled PyTorch 2.5.1 wheels and uses `pedalboard==0.9.23`; this avoids the large single CUDA wheel download and the illegal-instruction crash observed with `pedalboard==0.9.25` on Kaggle.
 
 `deemix` and `lib` were removed because the application does not import them. On Windows, install the FFmpeg and SoX executables and add them to `PATH` (the Python `sox` package is only a wrapper). Python 3.10 wheels are used for FAISS and the native audio packages.
 
 Model archives can be downloaded from any public HTTP(S) host. Private/local network destinations are rejected. ZIPs must contain exactly one `.pth` model and at most one `.index`; unrelated files are ignored. Downloads are limited to 4096 MiB and extracted archives to 8192 MiB by default. Set `AICOVERGEN_MAX_MODEL_DOWNLOAD_MB` or `AICOVERGEN_MAX_MODEL_UNPACKED_MB` to a larger positive MiB value for larger custom models. RVC voice checkpoints load with PyTorch's restricted `weights_only` mode; use standard RVC state-dictionary checkpoints. Fairseq's HuBERT loader still requires the bundled upstream checkpoint, so only replace that asset with a trusted file.
 
-### Clone AICoverGen repository
+### Clone the repository
 
 Open a command line window and run these commands to clone this entire repository and install the additional dependencies required.
 
@@ -118,7 +120,7 @@ Cog builds run this downloader during image setup and validate that the required
 
 ## Usage with WebUI
 
-To run the AICoverGen WebUI, run the following command.
+To run the AICoverGen Unofficial Edition WebUI, run the following command.
 
 ```
 python src/webui.py
@@ -210,6 +212,8 @@ python src/main.py [-h] -i SONG_INPUT -dir RVC_DIRNAME -p PITCH_CHANGE [-k | --k
 
 
 ## Terms of Use
+
+This edition is distributed under the MIT License. The original copyright notice is retained in [LICENSE](LICENSE).
 
 The use of the converted voice for the following purposes is prohibited.
 

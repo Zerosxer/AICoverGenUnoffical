@@ -389,10 +389,10 @@ if __name__ == '__main__':
     with open(os.path.join(rvc_models_dir, 'public_models.json'), encoding='utf8') as infile:
         public_models = json.load(infile)
 
-    with gr.Blocks(title='AICoverGen Studio | AI Cover Music Generator', css=CUSTOM_CSS) as app:
+    with gr.Blocks(title='AICoverGen Unofficial Edition | AI Cover Studio', css=CUSTOM_CSS) as app:
         gr.Markdown(
             '<div class="app-header">'
-            '<h1>✨ AICoverGen <span style="font-size:14px; font-weight:700; background:rgba(255,255,255,0.2); padding:3px 10px; border-radius:12px;">STUDIO PRO</span></h1>'
+            '<h1>✨ AICoverGen Unofficial Edition</h1>'
             '<p>เนรมิตเพลงคัฟเวอร์ด้วย AI เสียงที่คุณต้องการ จัดแต่งง่ายและจบในที่เดียว</p>'
             '</div>'
         )
