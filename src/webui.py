@@ -19,187 +19,116 @@ rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
 output_dir = os.path.join(BASE_DIR, 'song_output')
 
 CUSTOM_CSS = """
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Orbitron:wght@600;800&display=swap');
 
-/* --- Global Theme & Keyframes --- */
+/* --- Global Modern Flat Theme --- */
 :root {
-    --bg-dark: #0a0512;
-    --card-bg: rgba(20, 10, 38, 0.75);
-    --card-border: rgba(168, 85, 247, 0.25);
+    --bg-dark: #090613;
+    --panel-bg: rgba(18, 11, 31, 0.85);
+    --border-color: rgba(168, 85, 247, 0.2);
     --accent-purple: #a855f7;
-    --accent-glow: #c084fc;
     --accent-cyan: #06b6d4;
-    --text-primary: #f3e8ff;
-}
-
-@keyframes headerGlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-@keyframes pulseNeon {
-    0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), inset 0 0 10px rgba(168, 85, 247, 0.2); }
-    50% { box-shadow: 0 0 25px rgba(192, 132, 252, 0.7), inset 0 0 15px rgba(192, 132, 252, 0.4); }
+    --text-main: #f3e8ff;
 }
 
 body, .gradio-container {
     background-color: var(--bg-dark) !important;
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(88, 28, 135, 0.3) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, rgba(126, 34, 206, 0.15) 0px, transparent 80%) !important;
-    font-family: 'Kanit', 'Plus Jakarta Sans', sans-serif !important;
-    color: var(--text-primary) !important;
+    font-family: 'Kanit', sans-serif !important;
+    color: var(--text-main) !important;
+    max-width: 98% !important; /* ขยายเกือบเต็มจอ */
+    margin: 0 auto !important;
+    padding: 10px !important;
 }
 
-/* --- Header Section --- */
+/* Header แบนเรียบ มีสไตล์ */
 .app-header {
-    position: relative;
-    padding: 32px 40px;
-    margin-bottom: 24px;
-    border-radius: 20px;
-    background: linear-gradient(-45deg, #2e1065, #3b0764, #581c87, #1e1b4b);
-    background-size: 400% 400%;
-    animation: headerGlow 12s ease infinite;
-    border: 1px solid rgba(192, 132, 252, 0.4);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(168, 85, 247, 0.3);
-    overflow: hidden;
+    padding: 16px 24px;
+    margin-bottom: 16px;
+    background: linear-gradient(90deg, #2e1065 0%, #0f172a 100%);
+    border-bottom: 2px solid var(--accent-purple);
+    border-radius: 4px;
 }
 
 .app-header h1 {
     font-family: 'Orbitron', 'Kanit', sans-serif !important;
     color: #ffffff !important;
-    font-size: 28px !important;
-    font-weight: 700 !important;
-    letter-spacing: 1px;
-    text-shadow: 0 0 12px rgba(192, 132, 252, 0.8);
-    margin-bottom: 6px !important;
+    font-size: 24px !important;
+    margin: 0 !important;
 }
 
-.app-header p {
-    color: #e9d5ff !important;
-    font-size: 14px !important;
-    opacity: 0.9;
+/* ลบกล่องซ้อนกรอบซ้ำซ้อน (Remove Nested Box Shadows & Heavy Borders) */
+.gr-group, .gr-box, .gr-form, .gr-panel {
+    background: var(--panel-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important; /* ปรับขอบให้เหลี่ยมขึ้น ไม่มนแปลกๆ */
+    box-shadow: none !important;
+    padding: 12px !important;
+    margin: 4px 0 !important;
 }
 
-/* --- Tabs Styling --- */
-.tabs > .tab-nav {
-    border-bottom: 1px solid var(--card-border) !important;
-    gap: 8px !important;
-}
-
-.tabs > .tab-nav > button {
-    background: rgba(30, 16, 56, 0.6) !important;
-    color: #c084fc !important;
-    border: 1px solid var(--card-border) !important;
-    border-radius: 12px 12px 0 0 !important;
-    font-weight: 600 !important;
-    transition: all 0.3s ease !important;
-    padding: 10px 20px !important;
-}
-
-.tabs > .tab-nav > button.selected {
-    background: linear-gradient(180deg, rgba(168, 85, 247, 0.3) 0%, rgba(30, 16, 56, 0.9) 100%) !important;
-    color: #ffffff !important;
-    border-color: var(--accent-purple) !important;
-    box-shadow: 0 -4px 15px rgba(168, 85, 247, 0.3) !important;
-}
-
-/* --- Cards & Containers (Glassmorphism) --- */
-.gr-group, .gr-box, .gr-form {
-    background: var(--card-bg) !important;
-    backdrop-filter: blur(12px) !important;
-    border: 1px solid var(--card-border) !important;
-    border-radius: 16px !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.gr-group:hover {
-    border-color: rgba(192, 132, 252, 0.5) !important;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(168, 85, 247, 0.15) !important;
-    transform: translateY(-2px);
-}
-
-/* Custom Result Card */
-.result-card {
-    border: 1px solid rgba(192, 132, 252, 0.6) !important;
-    animation: pulseNeon 4s infinite ease-in-out;
-}
-
-/* --- Inputs & Controllers --- */
-input[type="text"], textarea, .gr-dropdown {
-    background: rgba(10, 5, 20, 0.7) !important;
+/* ปรับพวกช่อง Input ให้เรียบกลืนไปกับแผงควบคุม */
+input[type="text"], textarea, select, .gr-dropdown {
+    background: rgba(5, 3, 10, 0.8) !important;
     border: 1px solid rgba(168, 85, 247, 0.3) !important;
+    border-radius: 4px !important;
     color: #ffffff !important;
-    border-radius: 10px !important;
-    transition: all 0.3s ease !important;
 }
 
 input[type="text"]:focus, .gr-dropdown:focus-within {
-    border-color: var(--accent-glow) !important;
-    box-shadow: 0 0 12px rgba(192, 132, 252, 0.4) !important;
+    border-color: var(--accent-cyan) !important;
+    box-shadow: 0 0 8px rgba(6, 182, 212, 0.4) !important;
 }
 
-label span {
-    color: #e9d5ff !important;
+/* แท็บด้านบน */
+.tabs > .tab-nav {
+    border-bottom: 2px solid var(--border-color) !important;
+    gap: 4px !important;
+}
+
+.tabs > .tab-nav > button {
+    background: transparent !important;
+    color: #a78bfa !important;
+    border: none !important;
+    border-radius: 4px 4px 0 0 !important;
     font-weight: 500 !important;
+    padding: 8px 16px !important;
 }
 
-/* --- Buttons --- */
+.tabs > .tab-nav > button.selected {
+    background: rgba(168, 85, 247, 0.2) !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid var(--accent-purple) !important;
+}
+
+/* ปุ่มกดหลัก */
 button.primary-action {
-    background: linear-gradient(135deg, #7e22ce 0%, #a855f7 50%, #06b6d4 100%) !important;
-    background-size: 200% 200% !important;
+    background: linear-gradient(90deg, #7e22ce 0%, #06b6d4 100%) !important;
     color: #ffffff !important;
     border: none !important;
-    border-radius: 12px !important;
-    font-weight: 700 !important;
-    font-size: 16px !important;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4) !important;
-    transition: all 0.3s ease !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    padding: 10px 16px !important;
     cursor: pointer !important;
 }
 
 button.primary-action:hover {
-    background-position: 100% 0 !important;
-    transform: translateY(-2px) scale(1.01) !important;
-    box-shadow: 0 6px 25px rgba(192, 132, 252, 0.6), 0 0 15px rgba(6, 182, 212, 0.5) !important;
+    opacity: 0.9;
 }
 
 button.secondary-btn {
-    background: rgba(30, 20, 50, 0.8) !important;
-    color: #d8b4fe !important;
-    border: 1px solid rgba(168, 85, 247, 0.4) !important;
-    border-radius: 10px !important;
-    font-weight: 500 !important;
-    transition: all 0.2s ease !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #cbd5e1 !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important;
 }
 
 button.secondary-btn:hover {
-    background: rgba(88, 28, 135, 0.5) !important;
+    background: rgba(168, 85, 247, 0.15) !important;
     color: #ffffff !important;
-    border-color: var(--accent-glow) !important;
 }
 
-/* Accordion Customization */
-.gr-accordion {
-    background: rgba(15, 8, 30, 0.6) !important;
-    border: 1px solid rgba(168, 85, 247, 0.2) !important;
-    border-radius: 12px !important;
-    margin-top: 8px !important;
-}
-
-.gr-accordion > .label-wrap {
-    color: #c084fc !important;
-    font-weight: 600 !important;
-}
-
-footer { 
-    visibility: hidden !important; 
-}
+footer { visibility: hidden !important; }
 """
-
 
 def get_current_models(models_dir):
     if not os.path.isdir(models_dir):
@@ -353,20 +282,20 @@ if __name__ == '__main__':
     with open(os.path.join(rvc_models_dir, 'public_models.json'), encoding='utf8') as infile:
         public_models = json.load(infile)
 
-    # ธีมหลักใช้ Slate Dark ปรับสี Accent เป็น Purple
+    # ใช้ Soft Theme ที่ปลอดภัยจาก AttributeError
     custom_theme = gr.themes.Soft(
         primary_hue="purple",
         secondary_hue="cyan",
         neutral_hue="slate",
     ).set(
         body_background_fill="*neutral_950",
-        block_background_fill="rgba(20, 10, 38, 0.75)",
+        block_background_fill="rgba(22, 13, 38, 0.75)",
         block_border_color="rgba(168, 85, 247, 0.25)",
     )
 
-    with gr.Blocks(title='AICoverGen Studio | Cyber Edition', css=CUSTOM_CSS, theme=custom_theme) as app:
+    with gr.Blocks(title='AICoverGen Studio', css=CUSTOM_CSS, theme=custom_theme) as app:
         
-        # Cyber Header Banner
+        # Banner Header
         gr.Markdown(
             '<div class="app-header">'
             '<h1>🔮 AICoverGen Studio</h1>'
@@ -377,24 +306,26 @@ if __name__ == '__main__':
         with gr.Tabs():
             # ---------------- MAIN STUDIO TAB ----------------
             with gr.Tab('🎼 สตูดิโอสร้างเพลง (Main Studio)'):
+                # ปรับสัดส่วน 1:1 (Scale 1 และ Scale 1 เท่ากันทั้งซ้ายและขวา)
                 with gr.Row():
-                    # LEFT COLUMN: INPUTS & SETTINGS (Scale 3)
-                    with gr.Column(scale=3):
+                    
+                    # === LEFT COLUMN: INPUTS & SETTINGS ===
+                    with gr.Column(scale=1):
                         
-                        # Step 1: Input Setup
+                        # Section 1: Voice & Song Selection
                         with gr.Group():
                             gr.Markdown('### 1️⃣ เลือกโมเดลเสียง & แหล่งข้อมูลเพลง')
                             with gr.Row():
                                 rvc_model = gr.Dropdown(
                                     voice_models, label='🎭 เลือกโมเดลเสียง AI (Voice Model)',
-                                    info='กดรีเฟรชเมื่อมีการเพิ่มโมเดลใหม่', scale=4
+                                    info='กดรีเฟรชเมื่อเพิ่มโมเดลใหม่', scale=4
                                 )
                                 ref_btn = gr.Button('🔄', elem_classes=['secondary-btn'], scale=1)
 
                             with gr.Column() as yt_link_col:
                                 song_input = gr.Textbox(
-                                    label='🔗 ลิงก์ YouTube หรือ Path ไฟล์เพลงในเครื่อง',
-                                    placeholder='วางลิงก์ YouTube หรือใส่ Path ไฟล์ .wav / .mp3'
+                                    label='🔗 ลิงก์ YouTube หรือ Path ไฟล์เพลง',
+                                    placeholder='วาง URL YouTube หรือ Path ไฟล์ .wav/.mp3'
                                 )
                                 show_file_upload_button = gr.Button('📁 สลับไปใช้วิธีอัปโหลดไฟล์ตรง', elem_classes=['secondary-btn'])
 
@@ -409,7 +340,7 @@ if __name__ == '__main__':
                                     outputs=[local_file, song_input]
                                 )
 
-                        # Step 2: Pitch Tuning
+                        # Section 2: Pitch Tuning
                         with gr.Group():
                             gr.Markdown('### 2️⃣ ปรับระดับคีย์เสียง (Pitch Control)')
                             with gr.Row():
@@ -419,52 +350,46 @@ if __name__ == '__main__':
                                 )
                                 pitch_all = gr.Slider(
                                     -12, 12, value=0, step=1, label='🎶 คีย์รวมทั้งเพลง (Semitones)',
-                                    info='ปรับพร้อมกันทั้งเสียงร้องและดนตรี'
+                                    info='ปรับพร้อมกันทั้งร้องและดนตรี'
                                 )
 
-                        # Accordion Settings
-                        with gr.Accordion('⚙️ ปรับแต่งคุณลักษณะเสียงสังเคราะห์ (Voice Tuning)', open=False):
-                            with gr.Row():
-                                index_rate = gr.Slider(0, 1, value=0.5, label='🎯 Index Rate (ความคล้ายต้นฉบับ)')
-                                filter_radius = gr.Slider(0, 7, value=3, step=1, label='🧹 Filter Radius (ลดเสียงพร่า)')
-                            with gr.Row():
-                                rms_mix_rate = gr.Slider(0, 1, value=0.25, label='🔊 RMS Mix Rate (รักษาความดังเดิม)')
-                                protect = gr.Slider(0, 0.5, value=0.33, label='🛡️ Protect Breath (รักษาเสียงลมหายใจ)')
-                            with gr.Row():
-                                f0_method = gr.Dropdown(
-                                    ['rmvpe', 'mangio-crepe'], value='rmvpe', label='🔍 F0 Method (อัลกอริทึมจับคีย์)'
-                                )
-                                crepe_hop_length = gr.Slider(
-                                    32, 320, value=128, step=1, visible=False, label='⏱️ Crepe Hop Length'
-                                )
-                                f0_method.change(show_hop_slider, inputs=f0_method, outputs=crepe_hop_length)
+                        # Section 3: Advanced Options Accordion
+                        with gr.Accordion('⚙️ ปรับแต่งเพิ่มเติม (Advanced Settings)', open=False):
+                            with gr.Tab('🎙️ Voice Tuning'):
+                                with gr.Row():
+                                    index_rate = gr.Slider(0, 1, value=0.5, label='Index Rate')
+                                    filter_radius = gr.Slider(0, 7, value=3, step=1, label='Filter Radius')
+                                with gr.Row():
+                                    rms_mix_rate = gr.Slider(0, 1, value=0.25, label='RMS Mix Rate')
+                                    protect = gr.Slider(0, 0.5, value=0.33, label='Protect Breath')
+                                with gr.Row():
+                                    f0_method = gr.Dropdown(['rmvpe', 'mangio-crepe'], value='rmvpe', label='F0 Method')
+                                    crepe_hop_length = gr.Slider(32, 320, value=128, step=1, visible=False, label='Crepe Hop')
+                                    f0_method.change(show_hop_slider, inputs=f0_method, outputs=crepe_hop_length)
 
-                        with gr.Accordion('🎚️ มิกเซอร์ปรับสมดุลความดัง (Audio Mixer)', open=False):
-                            with gr.Row():
-                                main_gain = gr.Slider(-20, 20, value=0, step=1, label='🎤 เสียงร้องหลัก AI (dB)')
-                                backup_gain = gr.Slider(-20, 20, value=0, step=1, label='👥 เสียงร้องประสาน (dB)')
-                                inst_gain = gr.Slider(-20, 20, value=0, step=1, label='🎸 เสียงดนตรีประกอบ (dB)')
+                            with gr.Tab('🎚️ Audio Mixer'):
+                                with gr.Row():
+                                    main_gain = gr.Slider(-20, 20, value=0, step=1, label='เสียงร้องหลัก AI (dB)')
+                                    backup_gain = gr.Slider(-20, 20, value=0, step=1, label='เสียงร้องประสาน (dB)')
+                                    inst_gain = gr.Slider(-20, 20, value=0, step=1, label='เสียงดนตรีประกอบ (dB)')
 
-                        with gr.Accordion('🔮 จำลองมิติเสียงสตูดิโอ (Reverb Studio)', open=False):
-                            with gr.Row():
-                                reverb_rm_size = gr.Slider(0, 1, value=0.15, label='🏛️ ขนาดห้อง (Room Size)')
-                                reverb_wet = gr.Slider(0, 1, value=0.2, label='💧 ความก้องสะท้อน (Wet)')
-                            with gr.Row():
-                                reverb_dry = gr.Slider(0, 1, value=0.8, label='🎙 เสียงตรง (Dry)')
-                                reverb_damping = gr.Slider(0, 1, value=0.7, label='🔇 การซับเสียงซ้ำ (Damping)')
+                            with gr.Tab('🔮 Reverb Studio'):
+                                with gr.Row():
+                                    reverb_rm_size = gr.Slider(0, 1, value=0.15, label='Room Size')
+                                    reverb_wet = gr.Slider(0, 1, value=0.2, label='Wet')
+                                with gr.Row():
+                                    reverb_dry = gr.Slider(0, 1, value=0.8, label='Dry')
+                                    reverb_damping = gr.Slider(0, 1, value=0.7, label='Damping')
 
-                        with gr.Accordion('💾 การบันทึกและส่งออก (Export Option)', open=False):
-                            output_format = gr.Radio(
-                                ['mp3', 'wav'], value='mp3', label='ฟอร์แมตไฟล์ผลลัพธ์'
-                            )
-                            keep_files = gr.Checkbox(
-                                label='📁 บันทึกไฟล์แยกชิ้นส่วน (ร้อง/ดนตรี) ลงในโฟลเดอร์ song_output'
-                            )
+                            with gr.Tab('💾 Export'):
+                                output_format = gr.Radio(['mp3', 'wav'], value='mp3', label='ฟอร์แมตไฟล์ผลลัพธ์')
+                                keep_files = gr.Checkbox(label='บันทึกไฟล์แยกชิ้นส่วน (ร้อง/ดนตรี)')
 
-                    # RIGHT COLUMN: PROCESS & RESULT (Scale 2)
-                    with gr.Column(scale=2):
-                        with gr.Group(elem_classes=['result-card']):
-                            gr.Markdown('### ⚡ ประมวลผล & ผลลัพธ์')
+                    # === RIGHT COLUMN: GENERATION & OUTPUT ===
+                    with gr.Column(scale=1):
+                        with gr.Group(elem_classes=['output-card']):
+                            gr.Markdown('### ⚡ ประมวลผล & ผลลัพธ์ (Generation)')
+                            
                             generate_btn = gr.Button(
                                 '⚡ เริ่มสร้าง AI Cover', variant='primary', elem_classes=['primary-action']
                             )
@@ -472,6 +397,8 @@ if __name__ == '__main__':
                                 value='🧹 ล้างค่าทั้งหมด', components=[song_input, rvc_model, keep_files, local_file],
                                 elem_classes=['secondary-btn']
                             )
+                            
+                            gr.Markdown('---')
                             ai_cover = gr.Audio(label='🎧 ผลงาน AI Cover ที่เสร็จสมบูรณ์', buttons=['download'])
 
             # ---------------- MODEL HUB TAB ----------------
