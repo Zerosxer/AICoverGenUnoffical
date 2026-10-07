@@ -354,7 +354,7 @@ if __name__ == '__main__':
         public_models = json.load(infile)
 
     # ธีมหลักใช้ Slate Dark ปรับสี Accent เป็น Purple
-    custom_theme = gr.themes.Slate(
+    custom_theme = gr.themes.Soft(
         primary_hue="purple",
         secondary_hue="cyan",
         neutral_hue="slate",
