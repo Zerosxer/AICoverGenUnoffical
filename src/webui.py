@@ -19,116 +19,222 @@ rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
 output_dir = os.path.join(BASE_DIR, 'song_output')
 
 CUSTOM_CSS = """
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Orbitron:wght@600;800&display=swap');
+/* Font & Global Setup */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
 
-/* --- Global Modern Flat Theme --- */
+/* --- Modern White & Purple Fullscreen Theme --- */
 :root {
-    --bg-dark: #090613;
-    --panel-bg: rgba(18, 11, 31, 0.85);
-    --border-color: rgba(168, 85, 247, 0.2);
-    --accent-purple: #a855f7;
-    --accent-cyan: #06b6d4;
-    --text-main: #f3e8ff;
+    --bg-light: #F8F9FD;
+    --card-bg: #FFFFFF;
+    --border-purple: #DDD6FE;
+    --border-hover: #A855F7;
+    --accent-primary: #7C3AED;
+    --accent-gradient: linear-gradient(135deg, #7C3AED 0%, #9333EA 50%, #C084FC 100%);
+    --text-main: #1F2937;
+    --text-muted: #6B7280;
 }
 
 body, .gradio-container {
-    background-color: var(--bg-dark) !important;
-    font-family: 'Kanit', sans-serif !important;
+    background-color: var(--bg-light) !important;
+    font-family: 'Kanit', 'Plus Jakarta Sans', sans-serif !important;
     color: var(--text-main) !important;
-    max-width: 98% !important; /* ขยายเกือบเต็มจอ */
-    margin: 0 auto !important;
-    padding: 10px !important;
+    max-width: 100% !important; /* เต็มหน้าจอ */
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 16px 24px !important;
+    box-sizing: border-box !important;
+    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Header แบนเรียบ มีสไตล์ */
+/* Keyframes Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowPulse {
+    0% { opacity: 0.35; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(1.08); }
+    100% { opacity: 0.35; transform: scale(1); }
+}
+
+@keyframes buttonShine {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+/* Header Banner - Modern Purple Glass */
 .app-header {
-    padding: 16px 24px;
-    margin-bottom: 16px;
-    background: linear-gradient(90deg, #2e1065 0%, #0f172a 100%);
-    border-bottom: 2px solid var(--accent-purple);
-    border-radius: 4px;
+    padding: 24px 32px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #2E1065 0%, #581C87 50%, #7E22CE 100%);
+    color: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 32px -8px rgba(124, 58, 237, 0.25);
+    border: 1px solid rgba(192, 132, 252, 0.4);
+}
+
+.app-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -5%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(192, 132, 252, 0.45) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none;
+    animation: glowPulse 4s infinite ease-in-out;
 }
 
 .app-header h1 {
-    font-family: 'Orbitron', 'Kanit', sans-serif !important;
-    color: #ffffff !important;
-    font-size: 24px !important;
-    margin: 0 !important;
+    margin: 0 0 6px;
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    color: #FFFFFF !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
 }
 
-/* ลบกล่องซ้อนกรอบซ้ำซ้อน (Remove Nested Box Shadows & Heavy Borders) */
-.gr-group, .gr-box, .gr-form, .gr-panel {
-    background: var(--panel-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 4px !important; /* ปรับขอบให้เหลี่ยมขึ้น ไม่มนแปลกๆ */
-    box-shadow: none !important;
-    padding: 12px !important;
-    margin: 4px 0 !important;
+.app-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #F3E8FF !important;
+    position: relative;
+    z-index: 1;
 }
 
-/* ปรับพวกช่อง Input ให้เรียบกลืนไปกับแผงควบคุม */
-input[type="text"], textarea, select, .gr-dropdown {
-    background: rgba(5, 3, 10, 0.8) !important;
-    border: 1px solid rgba(168, 85, 247, 0.3) !important;
-    border-radius: 4px !important;
-    color: #ffffff !important;
+/* Cards & Containers with Lift Effect */
+.gr-group, .gr-box, .gr-form, .gr-panel, .block {
+    background: var(--card-bg) !important;
+    border: 1.5px solid var(--border-purple) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 16px -2px rgba(124, 58, 237, 0.04) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 16px !important;
 }
 
-input[type="text"]:focus, .gr-dropdown:focus-within {
-    border-color: var(--accent-cyan) !important;
-    box-shadow: 0 0 8px rgba(6, 182, 212, 0.4) !important;
+.gr-group:hover, .block:hover {
+    border-color: var(--border-hover) !important;
+    box-shadow: 0 8px 24px -4px rgba(124, 58, 237, 0.12) !important;
+    transform: translateY(-2px);
 }
 
-/* แท็บด้านบน */
+/* Inputs, Textboxes, Dropdowns */
+input[type="text"], textarea, select, .gr-dropdown, .gr-input {
+    background-color: #FAFAFE !important;
+    border: 1.5px solid var(--border-purple) !important;
+    border-radius: 10px !important;
+    color: var(--text-main) !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
+}
+
+input[type="text"]:focus, textarea:focus, .gr-dropdown:focus-within {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18) !important;
+    background-color: #FFFFFF !important;
+}
+
+/* Tab Navigation Styling */
 .tabs > .tab-nav {
-    border-bottom: 2px solid var(--border-color) !important;
-    gap: 4px !important;
+    border-bottom: 2px solid var(--border-purple) !important;
+    gap: 8px !important;
+    margin-bottom: 16px !important;
 }
 
 .tabs > .tab-nav > button {
     background: transparent !important;
-    color: #a78bfa !important;
+    color: var(--text-muted) !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 10px 20px !important;
     border: none !important;
-    border-radius: 4px 4px 0 0 !important;
-    font-weight: 500 !important;
-    padding: 8px 16px !important;
+    transition: all 0.25s ease !important;
+}
+
+.tabs > .tab-nav > button:hover {
+    color: var(--accent-primary) !important;
+    background: #F3E8FF !important;
 }
 
 .tabs > .tab-nav > button.selected {
-    background: rgba(168, 85, 247, 0.2) !important;
-    color: #ffffff !important;
-    border-bottom: 2px solid var(--accent-purple) !important;
+    color: var(--accent-primary) !important;
+    background: #FFFFFF !important;
+    border-bottom: 3px solid var(--accent-primary) !important;
+    box-shadow: 0 -4px 12px rgba(124, 58, 237, 0.08) !important;
 }
 
-/* ปุ่มกดหลัก */
+/* Primary Action Button (Gradient + Shine Effect) */
 button.primary-action {
-    background: linear-gradient(90deg, #7e22ce 0%, #06b6d4 100%) !important;
-    color: #ffffff !important;
+    background: var(--accent-gradient) !important;
+    color: #FFFFFF !important;
     border: none !important;
-    border-radius: 4px !important;
+    border-radius: 10px !important;
     font-weight: 600 !important;
-    padding: 10px 16px !important;
+    font-size: 15px !important;
+    padding: 12px 24px !important;
+    box-shadow: 0 6px 18px rgba(124, 58, 237, 0.28) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     cursor: pointer !important;
 }
 
-button.primary-action:hover {
-    opacity: 0.9;
+button.primary-action::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
 }
 
+button.primary-action:hover::after {
+    animation: buttonShine 0.8s ease-in-out;
+}
+
+button.primary-action:hover {
+    transform: translateY(-2px) scale(1.01) !important;
+    box-shadow: 0 10px 24px rgba(124, 58, 237, 0.4) !important;
+}
+
+button.primary-action:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+/* Secondary Buttons */
 button.secondary-btn {
-    background: rgba(255, 255, 255, 0.05) !important;
-    color: #cbd5e1 !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 4px !important;
+    background: #FFFFFF !important;
+    color: var(--accent-primary) !important;
+    border: 1.5px solid var(--border-purple) !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
 }
 
 button.secondary-btn:hover {
-    background: rgba(168, 85, 247, 0.15) !important;
-    color: #ffffff !important;
+    background: #F3E8FF !important;
+    border-color: var(--border-hover) !important;
+    transform: translateY(-1px);
 }
 
-footer { visibility: hidden !important; }
+/* Sliders Styling */
+input[type="range"] {
+    accent-color: var(--accent-primary) !important;
+}
+
+footer {
+    visibility: hidden !important;
+}
 """
+
 
 def get_current_models(models_dir):
     if not os.path.isdir(models_dir):
@@ -282,23 +388,23 @@ if __name__ == '__main__':
     with open(os.path.join(rvc_models_dir, 'public_models.json'), encoding='utf8') as infile:
         public_models = json.load(infile)
 
-    # ใช้ Soft Theme ที่ปลอดภัยจาก AttributeError
+    # Theme พื้นฐานแบบ Soft
     custom_theme = gr.themes.Soft(
         primary_hue="purple",
-        secondary_hue="cyan",
+        secondary_hue="purple",
         neutral_hue="slate",
     ).set(
-        body_background_fill="*neutral_950",
-        block_background_fill="rgba(22, 13, 38, 0.75)",
-        block_border_color="rgba(168, 85, 247, 0.25)",
+        body_background_fill="#F8F9FD",
+        block_background_fill="#FFFFFF",
+        block_border_color="#DDD6FE",
     )
 
     with gr.Blocks(title='AICoverGen Studio', css=CUSTOM_CSS, theme=custom_theme) as app:
         
-        # Banner Header
+        # Header Banner
         gr.Markdown(
             '<div class="app-header">'
-            '<h1>🔮 AICoverGen Studio</h1>'
+            '<h1>✨ AICoverGen Studio</h1>'
             '<p>ระบบเนรมิตเพลงคัฟเวอร์ด้วยเสียงสังเคราะห์ AI ระดับมืออาชีพ</p>'
             '</div>'
         )
@@ -306,11 +412,9 @@ if __name__ == '__main__':
         with gr.Tabs():
             # ---------------- MAIN STUDIO TAB ----------------
             with gr.Tab('🎼 สตูดิโอสร้างเพลง (Main Studio)'):
-                # ปรับสัดส่วน 1:1 (Scale 1 และ Scale 1 เท่ากันทั้งซ้ายและขวา)
                 with gr.Row():
-                    
-                    # === LEFT COLUMN: INPUTS & SETTINGS ===
-                    with gr.Column(scale=1):
+                    # LEFT COLUMN: INPUTS & SETTINGS (60%)
+                    with gr.Column(scale=3):
                         
                         # Section 1: Voice & Song Selection
                         with gr.Group():
@@ -325,7 +429,7 @@ if __name__ == '__main__':
                             with gr.Column() as yt_link_col:
                                 song_input = gr.Textbox(
                                     label='🔗 ลิงก์ YouTube หรือ Path ไฟล์เพลง',
-                                    placeholder='วาง URL YouTube หรือ Path ไฟล์ .wav/.mp3'
+                                    placeholder='วาง URL YouTube หรือ Path ไฟล์ .wav / .mp3'
                                 )
                                 show_file_upload_button = gr.Button('📁 สลับไปใช้วิธีอัปโหลดไฟล์ตรง', elem_classes=['secondary-btn'])
 
@@ -385,9 +489,9 @@ if __name__ == '__main__':
                                 output_format = gr.Radio(['mp3', 'wav'], value='mp3', label='ฟอร์แมตไฟล์ผลลัพธ์')
                                 keep_files = gr.Checkbox(label='บันทึกไฟล์แยกชิ้นส่วน (ร้อง/ดนตรี)')
 
-                    # === RIGHT COLUMN: GENERATION & OUTPUT ===
-                    with gr.Column(scale=1):
-                        with gr.Group(elem_classes=['output-card']):
+                    # RIGHT COLUMN: GENERATION & OUTPUT (40%)
+                    with gr.Column(scale=2):
+                        with gr.Group():
                             gr.Markdown('### ⚡ ประมวลผล & ผลลัพธ์ (Generation)')
                             
                             generate_btn = gr.Button(
