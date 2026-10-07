@@ -18,29 +18,29 @@ mdxnet_models_dir = os.path.join(BASE_DIR, 'mdxnet_models')
 rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
 output_dir = os.path.join(BASE_DIR, 'song_output')
 
-# --- Clean & Modern Purple Theme CSS ---
+# --- Clean & Minimal Gray Theme CSS ---
 CUSTOM_CSS = """
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
 
-/* Global Font & Background */
+/* พื้นหลังหลักสีเทา สบายตา */
 body, .gradio-container {
-    font-family: 'Kanit', 'Plus Jakarta Sans', sans-serif !important;
-    background-color: #F8F9FD !important;
+    background-color: #EEF2F6 !important;
+    font-family: 'Kanit', sans-serif !important;
 }
 
-/* Header Banner Styling */
+/* Header Banner สีน้ำเงิน-ม่วง เรียบหรู อ่านง่าย */
 .app-header {
-    padding: 24px 32px;
-    margin-bottom: 20px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #4C1D95 0%, #6D28D9 50%, #7C3AED 100%);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
     color: #FFFFFF !important;
-    box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.3);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
 }
 
 .app-header h1 {
-    margin: 0 0 6px 0 !important;
-    font-size: 28px !important;
+    margin: 0 0 4px 0 !important;
+    font-size: 24px !important;
     font-weight: 700 !important;
     color: #FFFFFF !important;
 }
@@ -48,47 +48,44 @@ body, .gradio-container {
 .app-header p {
     margin: 0 !important;
     font-size: 14px !important;
-    color: #E9D5FF !important;
-    opacity: 0.9;
+    color: #E0E7FF !important;
 }
 
-/* Clean Block & Group Styling (เลิกบังคับ Padding ซ้อนชั้น) */
-div[class*="interface"], .block, .gr-group {
+/* การ์ดและคอนเทนเนอร์สีขาว สะอาดตา */
+.block, .gr-group, .gr-box {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E5E7EB !important;
     border-radius: 12px !important;
-    border: 1px solid #E9D5FF !important;
 }
 
-/* Primary Action Buttons */
+/* ปุ่มหลัก (Primary Button) */
 button.primary-action {
-    background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%) !important;
+    background: #6366F1 !important;
     color: #FFFFFF !important;
     border: none !important;
-    font-weight: 600 !important;
     border-radius: 8px !important;
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3) !important;
-    transition: all 0.2s ease !important;
+    font-weight: 600 !important;
+    transition: background 0.2s ease !important;
 }
 
 button.primary-action:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4) !important;
+    background: #4F46E5 !important;
 }
 
-/* Secondary Buttons */
+/* ปุ่มรอง (Secondary Button) */
 button.secondary-btn {
-    background: #FFFFFF !important;
-    color: #6D28D9 !important;
-    border: 1px solid #DDD6FE !important;
+    background: #F3F4F6 !important;
+    color: #374151 !important;
+    border: 1px solid #D1D5DB !important;
     border-radius: 8px !important;
     font-weight: 500 !important;
 }
 
 button.secondary-btn:hover {
-    background: #F3E8FF !important;
-    border-color: #C084FC !important;
+    background: #E5E7EB !important;
 }
 
-/* Remove Footer */
+/* ซ่อน Footer Gradio */
 footer {
     display: none !important;
 }
@@ -247,10 +244,9 @@ if __name__ == '__main__':
     with open(os.path.join(rvc_models_dir, 'public_models.json'), encoding='utf8') as infile:
         public_models = json.load(infile)
 
-    # ธีมหลัก ปรับสี Soft + Slate เพิ่มความสบายตา
+    # Theme มาตรฐาน Soft สบายตา
     custom_theme = gr.themes.Soft(
-        primary_hue="purple",
-        secondary_hue="violet",
+        primary_hue="indigo",
         neutral_hue="slate",
     )
 
@@ -260,7 +256,7 @@ if __name__ == '__main__':
         gr.Markdown(
             '<div class="app-header">'
             '<h1>✨ AICoverGen Studio</h1>'
-            '<p>ระบบเนรมิตเพลงคัฟเวอร์ด้วยเสียงสังเคราะห์ AI ระดับมืออาชีพ</p>'
+            '<p>ระบบสร้างเพลงคัฟเวอร์ด้วยเสียง AI</p>'
             '</div>'
         )
 
@@ -268,7 +264,7 @@ if __name__ == '__main__':
             # ---------------- MAIN STUDIO TAB ----------------
             with gr.Tab('🎼 สตูดิโอสร้างเพลง (Main Studio)'):
                 with gr.Row():
-                    # LEFT COLUMN: INPUTS & SETTINGS (60%)
+                    # LEFT COLUMN (60%)
                     with gr.Column(scale=3):
                         
                         # Section 1: Voice & Song Selection
@@ -312,7 +308,7 @@ if __name__ == '__main__':
                                     info='ปรับพร้อมกันทั้งร้องและดนตรี'
                                 )
 
-                        # Section 3: Advanced Options Accordion
+                        # Section 3: Advanced Options
                         with gr.Accordion('⚙️ ปรับแต่งเพิ่มเติม (Advanced Settings)', open=False):
                             with gr.Tab('🎙️ Voice Tuning'):
                                 with gr.Row():
@@ -344,7 +340,7 @@ if __name__ == '__main__':
                                 output_format = gr.Radio(['mp3', 'wav'], value='mp3', label='ฟอร์แมตไฟล์ผลลัพธ์')
                                 keep_files = gr.Checkbox(label='บันทึกไฟล์แยกชิ้นส่วน (ร้อง/ดนตรี)')
 
-                    # RIGHT COLUMN: GENERATION & OUTPUT (40%)
+                    # RIGHT COLUMN (40%)
                     with gr.Column(scale=2):
                         with gr.Group():
                             gr.Markdown('#### ⚡ ประมวลผล & ผลลัพธ์ (Generation)')
