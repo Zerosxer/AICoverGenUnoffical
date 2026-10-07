@@ -19,216 +19,103 @@ rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
 output_dir = os.path.join(BASE_DIR, 'song_output')
 
 CUSTOM_CSS = """
-/* Font & Global Setup */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+
+* {
+    font-family: 'Kanit', 'Plus Jakarta Sans', sans-serif !important;
+}
 
 body, .gradio-container {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-    background-color: #F8F9FD !important;
+    background-color: #F8FAFC !important;
 }
 
-.gradio-container {
-    max-width: 1280px !important;
-    margin: 0 auto !important;
-    padding: 24px !important;
-    animation: fadeInUp 0.6s ease-out;
-}
-
-/* Keyframes Animations */
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes glowPulse {
-    0% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.08); }
-    100% { opacity: 0.3; transform: scale(1); }
-}
-
-@keyframes shine {
-    0% { left: -100%; }
-    100% { left: 200%; }
-}
-
-/* Fantasy Purple Header Banner */
+/* Header Banner */
 .app-header {
-    padding: 28px 32px;
-    margin-bottom: 24px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #1E1035 0%, #3B1C66 45%, #6B21A8 80%, #9333EA 100%);
-    color: #FFFFFF;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 16px 36px -8px rgba(107, 33, 168, 0.3);
-    border: 1px solid rgba(192, 132, 252, 0.35);
-}
-
-.app-header::before {
-    content: '';
-    position: absolute;
-    top: -40%;
-    right: -10%;
-    width: 320px;
-    height: 320px;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.5) 0%, rgba(0,0,0,0) 70%);
-    pointer-events: none;
-    animation: glowPulse 4s infinite ease-in-out;
+    padding: 24px 32px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #3B0764 0%, #6B21A8 50%, #9333EA 100%);
+    color: #FFFFFF !important;
+    box-shadow: 0 10px 25px -5px rgba(107, 33, 168, 0.25);
 }
 
 .app-header h1 {
-    margin: 0 0 6px;
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
     color: #FFFFFF !important;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: relative;
-    z-index: 1;
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    margin-bottom: 4px !important;
 }
 
 .app-header p {
-    margin: 0;
-    font-size: 14px;
-    color: #E9D5FF !important;
-    font-weight: 400;
-    position: relative;
-    z-index: 1;
+    color: #F3E8FF !important;
+    font-size: 14px !important;
 }
 
-/* Tab Navigation with Animated Indicator */
-.tabs {
-    background: transparent !important;
-    border: none !important;
-}
-
-.tab-nav {
-    border-bottom: 2px solid #E9D5FF !important;
-    gap: 8px;
-    margin-bottom: 20px !important;
-}
-
-.tab-nav button {
-    font-weight: 700 !important;
-    font-size: 15px !important;
-    color: #6B7280 !important;
-    border-radius: 12px 12px 0 0 !important;
-    padding: 12px 24px !important;
-    border: none !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.tab-nav button:hover {
-    color: #7C3AED !important;
-    background: rgba(233, 213, 255, 0.35) !important;
-}
-
-.tab-nav button.selected {
-    color: #7C3AED !important;
-    border-bottom: 3px solid #7C3AED !important;
-    background: #FFFFFF !important;
-    box-shadow: 0 -4px 16px rgba(124, 58, 237, 0.12) !important;
-}
-
-/* Cards & Panels with Hover Lift */
-.block, .form, .panel, accordion {
-    background: #FFFFFF !important;
-    border-radius: 16px !important;
-    border: 1.5px solid #E9D5FF !important;
-    box-shadow: 0 4px 16px -2px rgba(124, 58, 237, 0.04) !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.block:hover {
-    border-color: #C084FC !important;
-    box-shadow: 0 8px 28px -4px rgba(124, 58, 237, 0.15) !important;
-    transform: translateY(-2px);
-}
-
-/* Inputs, Textboxes, Dropdowns */
-input[type="text"], textarea, select, .gr-box, .gr-input {
-    border-radius: 10px !important;
-    border: 1.5px solid #E9D5FF !important;
-    background-color: #FAFAFE !important;
-    color: #1F2937 !important;
+/* Fix Label Colors & Text Visibility */
+label, span, p, h1, h2, h3, h4, h5, h6, .text-gray-500, gr-markdown {
+    color: #1E293B !important;
     font-weight: 500 !important;
-    transition: all 0.2s ease !important;
 }
 
-input[type="text"]:focus, textarea:focus, select:focus {
-    border-color: #8B5CF6 !important;
-    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.18) !important;
+/* Base Cards & Accordion */
+.block, .form, .panel, .accordion {
+    background: #FFFFFF !important;
+    border-radius: 14px !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Input Fields & Dropdowns */
+input, select, textarea, .gradio-dropdown {
+    background-color: #F8FAFC !important;
+    color: #0F172A !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 8px !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #9333EA !important;
     background-color: #FFFFFF !important;
 }
 
-/* Primary Button with Shine Effect & Glow */
-button.primary-action, .primary-btn, button.primary {
-    background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%) !important;
+/* Custom Result Box */
+.result-box {
+    background: #FFFFFF !important;
+    border: 2px solid #C084FC !important;
+    box-shadow: 0 8px 20px rgba(147, 51, 234, 0.08) !important;
+}
+
+/* Primary Action Button */
+button.primary-action, .primary-btn {
+    background: linear-gradient(135deg, #7E22CE 0%, #9333EA 100%) !important;
     color: #FFFFFF !important;
     border: none !important;
-    border-radius: 12px !important;
-    font-weight: 700 !important;
-    font-size: 16px !important;
-    padding: 14px 28px !important;
-    box-shadow: 0 6px 18px rgba(124, 58, 237, 0.35) !important;
-    position: relative !important;
-    overflow: hidden !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-button.primary-action::after, .primary-btn::after, button.primary::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: none;
-}
-
-button.primary-action:hover::after, .primary-btn:hover::after, button.primary:hover::after {
-    animation: shine 0.85s ease-in-out;
-}
-
-button.primary-action:hover, .primary-btn:hover, button.primary:hover {
-    transform: translateY(-3px) scale(1.01) !important;
-    box-shadow: 0 10px 25px rgba(124, 58, 237, 0.5) !important;
-    background: linear-gradient(135deg, #6D28D9 0%, #7E22CE 100%) !important;
-}
-
-button.primary-action:active, .primary-btn:active, button.primary:active {
-    transform: translateY(0) scale(0.98) !important;
-}
-
-/* Secondary Button Styling */
-button.secondary-btn, .clear-btn {
-    border: 1.5px solid #D8B4FE !important;
-    color: #7C3AED !important;
-    background: #FFFFFF !important;
     border-radius: 10px !important;
     font-weight: 600 !important;
+    box-shadow: 0 4px 14px rgba(126, 34, 206, 0.3) !important;
     transition: all 0.2s ease !important;
 }
 
+button.primary-action:hover, .primary-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 18px rgba(126, 34, 206, 0.4) !important;
+}
+
+/* Secondary Button */
+button.secondary-btn, .clear-btn {
+    background: #F1F5F9 !important;
+    color: #475569 !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 8px !important;
+}
+
 button.secondary-btn:hover, .clear-btn:hover {
-    background: #F3E8FF !important;
-    border-color: #A855F7 !important;
-    transform: translateY(-1px);
+    background: #E2E8F0 !important;
+    color: #0F172A !important;
 }
 
-/* Highlighted Result Box */
-.result-box {
-    background: linear-gradient(180deg, #FFFFFF 0%, #FBF8FF 100%) !important;
-    border: 2px solid #C084FC !important;
-    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.12) !important;
-    transition: all 0.3s ease !important;
-}
-
-footer {
-    visibility: hidden;
+footer { 
+    visibility: hidden !important; 
 }
 """
 
@@ -326,13 +213,11 @@ def filter_models(tags, query):
     query = (query or '').strip().lower()
     installed_models = get_current_models(rvc_models_dir)
 
-    # no filter
     if len(tags) == 0 and len(query) == 0:
         for model in public_models['voice_models']:
             if model['name'] not in installed_models:
                 models_table.append([model['name'], model['description'], model['credit'], model['url'], ', '.join(model['tags'])])
 
-    # filter based on tags and query
     elif len(tags) > 0 and len(query) > 0:
         for model in public_models['voice_models']:
             if all(tag in model['tags'] for tag in tags):
@@ -340,13 +225,11 @@ def filter_models(tags, query):
                 if model['name'] not in installed_models and query in model_attributes:
                     models_table.append([model['name'], model['description'], model['credit'], model['url'], ', '.join(model['tags'])])
 
-    # filter based on only tags
     elif len(tags) > 0:
         for model in public_models['voice_models']:
             if model['name'] not in installed_models and all(tag in model['tags'] for tag in tags):
                 models_table.append([model['name'], model['description'], model['credit'], model['url'], ', '.join(model['tags'])])
 
-    # filter based on only query
     else:
         for model in public_models['voice_models']:
             model_attributes = f"{model['name']} {model['description']} {model['credit']} {' '.join(model['tags'])}".lower()
@@ -389,7 +272,14 @@ if __name__ == '__main__':
     with open(os.path.join(rvc_models_dir, 'public_models.json'), encoding='utf8') as infile:
         public_models = json.load(infile)
 
-    with gr.Blocks(title='AICoverGen Unofficial Edition | AI Cover Studio', css=CUSTOM_CSS) as app:
+    # กำหนด Theme Soft เพื่อล้าง Dark Contrast
+    custom_theme = gr.themes.Soft(
+        primary_hue="purple",
+        secondary_hue="purple",
+        neutral_hue="slate",
+    )
+
+    with gr.Blocks(title='AICoverGen Unofficial Edition | AI Cover Studio', css=CUSTOM_CSS, theme=custom_theme) as app:
         gr.Markdown(
             '<div class="app-header">'
             '<h1>✨ AICoverGen Unofficial Edition</h1>'
@@ -442,7 +332,7 @@ if __name__ == '__main__':
                                     info='ปรับพร้อมกันทั้งดนตรีและเสียงร้อง'
                                 )
 
-                        # Accordion Settings Categorization
+                        # Accordion Settings
                         with gr.Accordion('⚙️ ปรับแต่งเสียง AI แบบละเอียด (Voice Tuning)', open=False):
                             with gr.Row():
                                 index_rate = gr.Slider(0, 1, value=0.5, label='🎯 Index Rate (ความคล้ายโมเดล)')
