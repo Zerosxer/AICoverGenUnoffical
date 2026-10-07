@@ -23,52 +23,531 @@ output_dir = os.path.join(BASE_DIR, 'song_output')
 # ==============================================================================
 CUSTOM_CSS = r"""
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-:root { --bg:#0b0d14; --surface:#121622; --surface2:#181d2b; --border:#282f43; --text:#edf0fb; --muted:#9ba5bd; --accent:#9b8cff; --accent2:#6d5dfc; }
-* { font-family:'Prompt',-apple-system,BlinkMacSystemFont,sans-serif !important; }
-body, .gradio-container { background:var(--bg) !important; color:var(--text) !important; }
-.gradio-container { max-width:1480px !important; margin:auto !important; padding:24px clamp(12px,2.4vw,34px) 40px !important; }
-footer { display:none !important; }
-#app-header { padding:30px 32px; margin:0 0 22px; border:1px solid #39345f; border-radius:22px; background:radial-gradient(ellipse at 85% 0%,rgba(125,103,255,.28),transparent 38%),linear-gradient(120deg,#17172a,#111522 70%); position:relative; overflow:hidden; }
-#app-header h1 { color:#fff; font-size:clamp(26px,3vw,38px); line-height:1.2; margin:0 0 9px; font-weight:700; letter-spacing:-.8px; }
-#app-header p { color:#b9c0d8; margin:0; font-size:14px; }
-.eyebrow { text-transform:uppercase; letter-spacing:2px; color:#b5aaff; font-size:11px; font-weight:700; margin-bottom:10px; }
-#app-header .header-chip { display:inline-block; margin-top:18px; padding:6px 11px; border-radius:999px; background:#272440; border:1px solid #49416e; color:#d7d0ff; font-size:11px; }
-.tabs { border-color:var(--border) !important; }
-.tab-nav { gap:7px !important; border-bottom:1px solid var(--border) !important; margin-bottom:18px !important; }
-.tab-nav button { color:var(--muted) !important; border:1px solid transparent !important; border-radius:10px 10px 0 0 !important; font-weight:500 !important; padding:12px 17px !important; }
-.tab-nav button.selected { color:#e5e0ff !important; border-color:#39345f !important; border-bottom:2px solid var(--accent) !important; background:#19182a !important; }
-.block, .gr-group, .gr-box, .gr-panel, .form, .gradio-container .panel { background:var(--surface) !important; border:1px solid var(--border) !important; border-radius:16px !important; box-shadow:0 8px 28px rgba(0,0,0,.12) !important; }
-.gr-group, .gradio-container .panel { padding:20px !important; }
-.section-heading { color:#f0edff; font-size:15px; font-weight:700; margin:0 0 4px; }
-.section-subtitle { color:var(--muted); font-size:12px; margin-bottom:15px; }
-.step-number { display:inline-flex; align-items:center; justify-content:center; width:25px; height:25px; margin-right:8px; border-radius:8px; background:#292447; border:1px solid #49416e; color:#c7bcff; font-size:12px; }
-label, .label-wrap span, .wrap .label-wrap span { color:#dce1f2 !important; font-weight:500 !important; font-size:13px !important; }
-input, textarea, select, .gr-input, .gr-dropdown, .wrap input, .wrap textarea { background:#0e121d !important; color:#eef0fa !important; border:1px solid #30374b !important; border-radius:10px !important; }
-input::placeholder, textarea::placeholder { color:#69738b !important; }
-input:focus, textarea:focus { border-color:var(--accent) !important; box-shadow:0 0 0 2px rgba(155,140,255,.15) !important; }
-button { border-radius:10px !important; transition:transform .16s ease,filter .16s ease,border-color .16s ease !important; }
-button:hover { filter:brightness(1.08); }
-button.primary, button.primary-action { background:linear-gradient(135deg,#8d79ff,#6655e8) !important; color:#fff !important; border:1px solid #9c8dff !important; font-weight:700 !important; box-shadow:0 7px 22px rgba(109,93,252,.2) !important; }
-button.primary:hover, button.primary-action:hover { transform:translateY(-1px); }
-button.secondary-btn { background:#1b2030 !important; color:#cbd2e6 !important; border:1px solid #353d53 !important; }
-#generate-btn { min-height:58px !important; font-size:16px !important; letter-spacing:.1px; }
-#clear-btn { margin-top:9px; }
-#output-card { border-color:#39345f !important; background:linear-gradient(145deg,#17182a,#121622) !important; }
-#output-card audio { width:100%; }
-.gradio-container .accordion { border:1px solid var(--border) !important; border-radius:14px !important; background:var(--surface) !important; }
-.gradio-container .accordion > .label-wrap { padding:15px 18px !important; }
-.gradio-container .tabitem { padding-top:14px !important; }
-.gradio-container .wrap .info, .gradio-container .info { color:#8792ab !important; font-size:11px !important; }
-.gradio-container .prose, .gradio-container .markdown { color:var(--text) !important; }
-.gradio-container .prose h1, .gradio-container .prose h2, .gradio-container .prose h3 { color:#f1efff !important; }
-.gradio-container hr { border-color:var(--border) !important; }
-.gradio-container input[type=range] { accent-color:var(--accent) !important; }
-.gradio-container table { background:#101420 !important; color:var(--text) !important; }
-.gradio-container th { background:#1b2030 !important; color:#e4e7f5 !important; }
-.gradio-container td { border-color:var(--border) !important; }
-.gradio-container .upload-container { border-color:#424968 !important; background:#101420 !important; border-radius:12px !important; }
-@media (max-width: 800px) { .gradio-container { padding:12px !important; } #app-header { padding:23px 20px; border-radius:16px; } .gr-group { padding:14px !important; } .tab-nav button { padding:10px !important; font-size:12px !important; } }
+
+:root {
+    --bg: #090b12;
+    --surface: #111522;
+    --surface-soft: #151a28;
+    --surface-hover: #1a2030;
+    --border: #292f42;
+    --border-soft: #22283a;
+    --text: #edf0fb;
+    --muted: #929bb2;
+    --accent: #9b8cff;
+    --accent-2: #6d5dfc;
+}
+
+* {
+    font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: var(--bg) !important;
+}
+
+body,
+.gradio-container {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+.gradio-container {
+    width: 100% !important;
+    max-width: 1480px !important;
+    margin: 0 auto !important;
+    padding: 24px clamp(12px, 2.4vw, 34px) 42px !important;
+}
+
+footer { display: none !important; }
+
+/* -------------------------------------------------------------------------- */
+/* Header                                                                    */
+/* -------------------------------------------------------------------------- */
+#app-header {
+    padding: 30px 32px;
+    margin: 0 0 22px;
+    border: 1px solid #39345f;
+    border-radius: 22px;
+    background:
+        radial-gradient(ellipse at 85% 0%, rgba(125,103,255,.28), transparent 38%),
+        linear-gradient(120deg, #17172a, #111522 70%);
+    overflow: hidden;
+}
+
+#app-header h1 {
+    color: #fff;
+    font-size: clamp(27px, 3vw, 38px);
+    line-height: 1.2;
+    margin: 0 0 9px;
+    font-weight: 700;
+    letter-spacing: -.8px;
+}
+
+#app-header p {
+    color: #b9c0d8;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b5aaff;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.header-chip {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: #272440;
+    border: 1px solid #49416e;
+    color: #d7d0ff;
+    font-size: 11px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Tabs                                                                       */
+/* -------------------------------------------------------------------------- */
+.tabs {
+    border-color: var(--border) !important;
+}
+
+.tab-nav {
+    gap: 7px !important;
+    border-bottom: 1px solid var(--border) !important;
+    margin-bottom: 18px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none;
+}
+
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-nav button {
+    flex: 0 0 auto !important;
+    color: var(--muted) !important;
+    border: 1px solid transparent !important;
+    border-radius: 10px 10px 0 0 !important;
+    font-weight: 500 !important;
+    padding: 12px 17px !important;
+    white-space: nowrap !important;
+}
+
+.tab-nav button.selected {
+    color: #e5e0ff !important;
+    border-color: #39345f !important;
+    border-bottom: 2px solid var(--accent) !important;
+    background: #19182a !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* IMPORTANT: Only our own cards get card backgrounds/borders.               */
+/* Do NOT style .block / .gr-box / .gr-panel globally: those are Gradio      */
+/* wrappers and caused the old "box inside box" problem.                     */
+/* -------------------------------------------------------------------------- */
+.ui-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 18px !important;
+    margin-bottom: 14px !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 28px rgba(0,0,0,.12) !important;
+}
+
+.ui-card > .block,
+.ui-card > .gr-box,
+.ui-card > .gr-panel,
+.ui-card .block,
+.ui-card .gr-box,
+.ui-card .gr-panel {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.ui-card .form,
+.ui-card .form > .form,
+.ui-card .panel {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.studio-layout,
+.studio-layout > .form,
+.studio-layout > .block {
+    gap: 14px !important;
+}
+
+.studio-column {
+    min-width: 0 !important;
+}
+
+.section-heading {
+    color: #f0edff;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0 0 4px;
+}
+
+.section-subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    margin-right: 8px;
+    border-radius: 8px;
+    background: #292447;
+    border: 1px solid #49416e;
+    color: #c7bcff;
+    font-size: 12px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Form controls                                                              */
+/* -------------------------------------------------------------------------- */
+label,
+.label-wrap span,
+.wrap .label-wrap span {
+    color: #dce1f2 !important;
+    font-weight: 500 !important;
+    font-size: 13px !important;
+}
+
+input,
+textarea,
+select,
+.gr-input,
+.gr-dropdown,
+.wrap input,
+.wrap textarea {
+    background: #0e121d !important;
+    color: #eef0fa !important;
+    border: 1px solid #30374b !important;
+    border-radius: 10px !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #69738b !important;
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px rgba(155,140,255,.15) !important;
+}
+
+button {
+    border-radius: 10px !important;
+    transition: transform .16s ease, filter .16s ease, border-color .16s ease !important;
+}
+
+button:hover { filter: brightness(1.08); }
+
+button.primary,
+button.primary-action {
+    background: linear-gradient(135deg, #8d79ff, #6655e8) !important;
+    color: #fff !important;
+    border: 1px solid #9c8dff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 7px 22px rgba(109,93,252,.20) !important;
+}
+
+button.primary:hover,
+button.primary-action:hover {
+    transform: translateY(-1px);
+}
+
+button.secondary-btn {
+    background: #1b2030 !important;
+    color: #cbd2e6 !important;
+    border: 1px solid #353d53 !important;
+}
+
+#generate-btn {
+    width: 100% !important;
+    min-height: 58px !important;
+    font-size: 16px !important;
+}
+
+#clear-btn {
+    width: 100% !important;
+    margin-top: 9px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Pitch: stable 2-column desktop layout, single-column mobile layout        */
+/* -------------------------------------------------------------------------- */
+.pitch-row {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+}
+
+.pitch-row > .form,
+.pitch-row > .block {
+    min-width: 0 !important;
+    flex: 1 1 0 !important;
+}
+
+.pitch-row .wrap,
+.pitch-row .container {
+    min-width: 0 !important;
+}
+
+.pitch-row input[type="range"] {
+    min-width: 0 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Advanced settings                                                         */
+/* -------------------------------------------------------------------------- */
+.gradio-container .accordion {
+    border: 1px solid var(--border) !important;
+    border-radius: 14px !important;
+    background: var(--surface) !important;
+    overflow: hidden !important;
+}
+
+.gradio-container .accordion > .label-wrap {
+    padding: 15px 18px !important;
+}
+
+.gradio-container .accordion .tabitem {
+    padding: 14px 2px 2px !important;
+}
+
+.gradio-container .info,
+.gradio-container .wrap .info {
+    color: #8792ab !important;
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+}
+
+.gradio-container .prose,
+.gradio-container .markdown {
+    color: var(--text) !important;
+}
+
+.gradio-container .prose h1,
+.gradio-container .prose h2,
+.gradio-container .prose h3 {
+    color: #f1efff !important;
+}
+
+.gradio-container hr {
+    border-color: var(--border) !important;
+}
+
+.gradio-container input[type=range] {
+    accent-color: var(--accent) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Output                                                                     */
+/* -------------------------------------------------------------------------- */
+#output-card {
+    border-color: #39345f !important;
+    background: linear-gradient(145deg, #17182a, #121622) !important;
+}
+
+#output-card audio {
+    width: 100% !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Model hub                                                                  */
+/* -------------------------------------------------------------------------- */
+.model-hub-title {
+    margin: 4px 0 3px !important;
+    color: #f1efff !important;
+    font-size: clamp(24px, 3vw, 32px) !important;
+}
+
+.model-hub-description {
+    color: var(--muted) !important;
+    margin-bottom: 18px !important;
+}
+
+.model-form-row {
+    width: 100% !important;
+    gap: 10px !important;
+}
+
+.model-form-row > .form,
+.model-form-row > .block {
+    min-width: 0 !important;
+}
+
+.gradio-container table {
+    background: #101420 !important;
+    color: var(--text) !important;
+}
+
+.gradio-container th {
+    background: #1b2030 !important;
+    color: #e4e7f5 !important;
+}
+
+.gradio-container td {
+    border-color: var(--border) !important;
+}
+
+.gradio-container .upload-container {
+    border-color: #424968 !important;
+    background: #101420 !important;
+    border-radius: 12px !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Responsive                                                                 */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .gradio-container {
+        padding: 16px 14px 30px !important;
+    }
+
+    #app-header {
+        padding: 24px 22px;
+        border-radius: 18px;
+        margin-bottom: 16px;
+    }
+
+    .studio-layout {
+        flex-direction: column !important;
+    }
+
+    .studio-layout > .form,
+    .studio-layout > .block,
+    .studio-column {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: 1 1 100% !important;
+    }
+
+    .ui-card {
+        padding: 15px !important;
+        border-radius: 14px !important;
+    }
+}
+
+@media (max-width: 700px) {
+    .gradio-container {
+        padding: 10px 10px 24px !important;
+    }
+
+    #app-header h1 {
+        font-size: 27px !important;
+        letter-spacing: -.5px;
+    }
+
+    #app-header p {
+        font-size: 13px;
+        line-height: 1.65;
+    }
+
+    .header-chip {
+        font-size: 10px;
+        margin-top: 14px;
+    }
+
+    .tab-nav {
+        gap: 3px !important;
+        margin-bottom: 13px !important;
+    }
+
+    .tab-nav button {
+        padding: 9px 12px !important;
+        font-size: 12px !important;
+    }
+
+    .ui-card {
+        padding: 13px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .pitch-row {
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
+    }
+
+    .pitch-row > .form,
+    .pitch-row > .block {
+        width: 100% !important;
+        flex: 1 1 auto !important;
+    }
+
+    .model-form-row {
+        flex-direction: column !important;
+    }
+
+    .model-form-row > .form,
+    .model-form-row > .block {
+        width: 100% !important;
+        flex: 1 1 auto !important;
+    }
+
+    .section-heading {
+        font-size: 14px;
+    }
+
+    .section-subtitle {
+        font-size: 11px;
+    }
+
+    .gradio-container .accordion > .label-wrap {
+        padding: 13px 14px !important;
+    }
+}
+
+@media (max-width: 430px) {
+    #app-header {
+        padding: 20px 17px;
+    }
+
+    #app-header h1 {
+        font-size: 24px !important;
+    }
+
+    .eyebrow {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+    }
+
+    .ui-card {
+        padding: 11px !important;
+    }
+
+    #generate-btn {
+        min-height: 54px !important;
+        font-size: 14px !important;
+    }
+}
 """
+
 
 
 def get_current_models(models_dir):
@@ -256,9 +735,9 @@ if __name__ == '__main__':
 
         with gr.Tabs():
             with gr.Tab('♫  Studio'):
-                with gr.Row(equal_height=False):
-                    with gr.Column(scale=6, min_width=320):
-                        with gr.Group():
+                with gr.Row(equal_height=False, elem_classes=['studio-layout']):
+                    with gr.Column(scale=6, min_width=320, elem_classes=['studio-column']):
+                        with gr.Group(elem_classes=['ui-card']):
                             gr.Markdown('<div class="section-heading"><span class="step-number">01</span>Voice & Source</div><div class="section-subtitle">เลือกโมเดลเสียงและกำหนดแหล่งที่มาของเพลง</div>')
                             with gr.Row(equal_height=True):
                                 rvc_model = gr.Dropdown(voice_models, label='VOICE MODEL', info='เลือกโมเดลเสียง RVC ที่ติดตั้งไว้', scale=5)
@@ -272,9 +751,9 @@ if __name__ == '__main__':
                                 show_yt_link_button = gr.Button('← กลับไปใช้ URL / Path', elem_classes=['secondary-btn'])
                                 song_input_file.upload(process_file_upload, inputs=[song_input_file], outputs=[local_file, song_input])
 
-                        with gr.Group():
+                        with gr.Group(elem_classes=['ui-card']):
                             gr.Markdown('<div class="section-heading"><span class="step-number">02</span>Pitch Control</div><div class="section-subtitle">ตั้งค่าระดับเสียงร้องและคีย์เพลงก่อนประมวลผล</div>')
-                            with gr.Row():
+                            with gr.Row(elem_classes=['pitch-row']):
                                 pitch = gr.Slider(-3, 3, value=0, step=1, label='VOCAL PITCH · OCTAVES', info='+1 สูงขึ้นหนึ่ง octave · -1 ต่ำลงหนึ่ง octave')
                                 pitch_all = gr.Slider(-12, 12, value=0, step=1, label='SONG KEY · SEMITONES', info='เปลี่ยนคีย์เสียงร้องและดนตรีพร้อมกัน')
 
@@ -308,13 +787,13 @@ if __name__ == '__main__':
                                     output_format = gr.Radio(['mp3', 'wav'], value='mp3', label='Output format')
                                     keep_files = gr.Checkbox(label='เก็บไฟล์แยกเสียงร้องและดนตรีไว้ด้วย')
 
-                    with gr.Column(scale=5, min_width=300):
-                        with gr.Group():
+                    with gr.Column(scale=5, min_width=300, elem_classes=['studio-column']):
+                        with gr.Group(elem_classes=['ui-card']):
                             gr.Markdown('<div class="section-heading">Generation</div><div class="section-subtitle">ตรวจสอบการตั้งค่าแล้วเริ่มสร้างผลงานของคุณ</div>')
                             gr.Markdown('**พร้อมสร้าง AI Cover หรือยัง?**\n\nเลือกโมเดลเสียงและใส่แหล่งเพลงทางด้านซ้าย จากนั้นกดปุ่มด้านล่างเพื่อเริ่มประมวลผล')
                             generate_btn = gr.Button('▶  Generate AI Cover', variant='primary', size='lg', elem_classes=['primary-action'], elem_id='generate-btn')
                             clear_btn = gr.ClearButton(value='Reset inputs', components=[song_input, rvc_model, keep_files, local_file], elem_classes=['secondary-btn'], elem_id='clear-btn')
-                        with gr.Group(elem_id='output-card'):
+                        with gr.Group(elem_id='output-card', elem_classes=['ui-card']):
                             gr.Markdown('<div class="section-heading">Your output</div><div class="section-subtitle">ผลงานที่ประมวลผลเสร็จจะแสดงที่นี่</div>')
                             ai_cover = gr.Audio(label='AI COVER PLAYER', type='filepath')
                             gr.Markdown('<div class="section-subtitle">เคล็ดลับ: หากเสียงยังไม่ตรงใจ ลองปรับ Pitch หรือค่าภายใน Advanced audio settings แล้วสร้างใหม่</div>')
@@ -323,7 +802,7 @@ if __name__ == '__main__':
                 gr.Markdown('## Voice Model Library\nจัดการโมเดลเสียงได้ 3 วิธี เลือกดาวน์โหลดจาก URL ค้นหาคลังสาธารณะ หรืออัปโหลดไฟล์ ZIP จากเครื่อง')
                 with gr.Tabs():
                     with gr.Tab('Direct URL'):
-                        with gr.Group():
+                        with gr.Group(elem_classes=['ui-card']):
                             gr.Markdown('<div class="section-heading">Install from URL</div><div class="section-subtitle">ใส่ลิงก์ ZIP ที่เข้าถึงได้โดยตรงและตั้งชื่อโมเดล</div>')
                             model_zip_link = gr.Textbox(label='MODEL ZIP URL', placeholder='https://example.com/model.zip')
                             model_name = gr.Textbox(label='MODEL NAME', placeholder='เช่น Lisa, Gura')
@@ -336,14 +815,14 @@ if __name__ == '__main__':
                             [model_zip_link, model_name], [], download_online_model,
                         )
                     with gr.Tab('Public library'):
-                        with gr.Group():
+                        with gr.Group(elem_classes=['ui-card']):
                             gr.Markdown('<div class="section-heading">Browse public models</div><div class="section-subtitle">ค้นหาโมเดลที่ยังไม่ได้ติดตั้ง แล้วเลือกแถวเพื่อเตรียมติดตั้ง</div>')
-                            with gr.Row():
+                            with gr.Row(elem_classes=['model-form-row']):
                                 pub_zip_link = gr.Textbox(label='SELECTED MODEL URL', interactive=False)
                                 pub_model_name = gr.Textbox(label='MODEL NAME', interactive=False)
                             download_pub_btn = gr.Button('↓  Install selected model', variant='primary', elem_classes=['primary-action'])
                             pub_dl_output_message = gr.Textbox(label='INSTALL STATUS', interactive=False)
-                        with gr.Row():
+                        with gr.Row(elem_classes=['model-form-row']):
                             search_query = gr.Textbox(label='SEARCH MODELS', placeholder='ค้นหาจากชื่อหรือคำอธิบาย...')
                             filter_tags = gr.CheckboxGroup(value=[], label='FILTER TAGS', choices=[])
                         load_public_models_button = gr.Button('↻ Load / Refresh model list', elem_classes=['secondary-btn'])
@@ -354,7 +833,7 @@ if __name__ == '__main__':
                         filter_tags.change(filter_models, inputs=[filter_tags, search_query], outputs=public_models_table)
                         download_pub_btn.click(download_online_model, inputs=[pub_zip_link, pub_model_name], outputs=pub_dl_output_message)
                     with gr.Tab('Upload ZIP'):
-                        with gr.Group():
+                        with gr.Group(elem_classes=['ui-card']):
                             gr.Markdown('<div class="section-heading">Install a local model</div><div class="section-subtitle">เลือกไฟล์ ZIP และกำหนดชื่อโมเดลก่อนติดตั้ง</div>')
                             zip_file = gr.File(label='MODEL ARCHIVE · ZIP', file_types=['.zip'])
                             local_model_name = gr.Textbox(label='MODEL NAME', placeholder='ตั้งชื่อโมเดลที่จำง่าย')
