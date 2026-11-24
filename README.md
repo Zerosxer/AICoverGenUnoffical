@@ -1,8 +1,8 @@
-# AICoverGen Unofficial Edition
+# S.H.A.L.E Studio
 
-A community-maintained edition of AICoverGen for creating AI covers with RVC v2 voice models from YouTube videos or local audio files. It includes a categorized Studio and Model Hub, updated dependency pins, and setup guidance for local and hosted notebook environments.
+S.H.A.L.E Studio is a rebranded AI-cover workspace built on the AICoverGen voice-conversion pipeline. It creates covers with RVC v2 voice models from YouTube videos or local audio files, with a Cover Studio and Voice Model library for local and Kaggle use.
 
-This is an unofficial community project and is not affiliated with the original AICoverGen authors.
+This project is not affiliated with the original AICoverGen authors. Original notices and license terms are retained; see [LICENSE](LICENSE).
 
 Original project showcase (legacy UI): https://www.youtube.com/watch?v=2qZuE4WM7CM
 
@@ -28,6 +28,9 @@ The WebUI groups song generation in the Studio and voice-model downloads/uploads
 
 ## Changelog
 
+- S.H.A.L.E Studio 1.0: rebranded the interface and added the CE-to-Kaggle Gradio link workflow
+- Keep YouTube downloads in per-song output directories, validate source URLs, and avoid reusing a mixed cover for different audio settings
+- Pin `pedalboard==0.9.23` for the supported Kaggle runtime
 - Redesigned the WebUI into a categorized Studio and Model Hub, with direct URL, public catalog, and local ZIP model workflows
 - WebUI for easier conversions and downloading of voice models
 - Support for cover generations from a local audio file
@@ -46,21 +49,24 @@ The WebUI groups song generation in the Studio and voice-model downloads/uploads
 - Pitch change for vocals and instrumentals together. Same effect as changing key of song in Karaoke.
 - Audio output format option: wav or mp3.
 
-## Update AICoverGen Unofficial Edition
+## Update dependencies
 
-Pull the latest changes and install any updated requirements from the `AICoverGenUnoffical` directory:
+From the project directory, install compatible requirements:
 
 ```
-git pull
 python -m pip install "pip<24.1"
 pip install -r requirements.txt
 ```
 
 On Colab, use `Runtime` → `Disconnect and delete runtime`, then reopen the notebook linked below and select `Runtime` → `Run all`.
 
-## Colab notebook
+## Kaggle and Colab
 
-For those without a powerful enough NVIDIA GPU, try AICoverGen Unofficial Edition using Google Colab.
+For GPU inference, run the Kaggle notebook cells in order. The final cell starts the Python inference backend and prints a temporary link that opens the HTML interface at **AI Audio Studio → AI Cover Studio**. The notebook and interface work only while that Kaggle runtime is active; a new runtime creates a new link. Anyone with the link can access the running backend, so do not share it publicly.
+
+The Kaggle notebook installs the source from its configured repository and runs the inference backend in an isolated Python 3.10 environment. Keep the notebook session running while using the Studio. The HTML page uses the Gradio JavaScript client to call the backend's documented generation and voice-model endpoints.
+
+For those without a powerful enough NVIDIA GPU, try the Colab notebook.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Zerosxer/AICoverGenUnoffical/blob/main/AICoverGen_colab.ipynb)
 
@@ -88,7 +94,7 @@ Follow the instructions [here](https://www.tutorialexample.com/a-step-guide-to-i
 
 ### Dependency compatibility
 
-The supported local and Cog environment uses Python 3.10, CUDA 12.1, and the pinned packages in `requirements.txt`. The WebUI uses Gradio 6. RVC's HuBERT checkpoint loader still depends on Fairseq 0.12.2; its legacy OmegaConf metadata requires pip older than 24.1 and Cython 0.29 during installation. The project pins both and installs the compatible pip version first. Inference uses PyTorch 2.5.1 because newer PyTorch releases change checkpoint loading defaults used by Fairseq. ONNX Runtime 1.20 is pinned to match this CUDA/cuDNN runtime; newer ONNX Runtime builds require newer CUDA toolkits. The remaining audio/UI dependencies are upgraded and pinned together. CPU inference is supported but significantly slower; an NVIDIA GPU with a CUDA 12.1-compatible driver is recommended. The MDX separator uses ONNX Runtime's CUDA provider when available and otherwise reports that it is using CPU. The Colab notebook installs the PyPI CUDA-enabled PyTorch 2.5.1 wheels and uses `pedalboard==0.9.23`; this avoids the large single CUDA wheel download and the illegal-instruction crash observed with `pedalboard==0.9.25` on Kaggle.
+The supported local and Kaggle environment uses Python 3.10 and the pinned packages in `requirements.txt`. The WebUI uses Gradio 6. RVC's HuBERT checkpoint loader still depends on Fairseq 0.12.2; its legacy OmegaConf metadata requires pip older than 24.1 and Cython 0.29 during installation. The project pins both and installs the compatible pip version first. Inference uses PyTorch 2.5.1 because newer PyTorch releases change checkpoint loading defaults used by Fairseq. ONNX Runtime 1.20 is pinned for the supported CUDA runtime. The Kaggle notebook installs the PyPI CUDA-enabled PyTorch 2.5.1 wheels and uses `pedalboard==0.9.23` to avoid the illegal-instruction crash observed with newer pedalboard builds on Kaggle. CPU inference is supported but significantly slower; an NVIDIA GPU is recommended. The MDX separator uses ONNX Runtime's CUDA provider when available and reports when it falls back to CPU.
 
 `deemix` and `lib` were removed because the application does not import them. On Windows, install the FFmpeg and SoX executables and add them to `PATH` (the Python `sox` package is only a wrapper). Python 3.10 wheels are used for FAISS and the native audio packages.
 
@@ -120,7 +126,7 @@ Cog builds run this downloader during image setup and validate that the required
 
 ## Usage with WebUI
 
-To run the AICoverGen Unofficial Edition WebUI, run the following command.
+To run S.H.A.L.E Studio, run the following command.
 
 ```
 python src/webui.py
@@ -211,11 +217,13 @@ python src/main.py [-h] -i SONG_INPUT -dir RVC_DIRNAME -p PITCH_CHANGE [-k | --k
 | `-oformat OUTPUT_FORMAT`                   | Optional. Default mp3. wav for best quality and large file size, mp3 for decent quality and small file size. |
 
 
-## Terms of Use
+## Responsible Use
 
 This edition is distributed under the MIT License. The original copyright notice is retained in [LICENSE](LICENSE).
 
-The use of the converted voice for the following purposes is prohibited.
+Use only audio and voice models you have permission to use. Do not impersonate a real person without their consent or use generated audio to deceive, defraud, harass, or harm others. Follow applicable copyright, privacy, and platform rules.
+
+The upstream AICoverGen terms also prohibit:
 
 * Criticizing or attacking individuals.
 

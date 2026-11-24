@@ -13,6 +13,7 @@ from model_utils import (
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+APP_VERSION = '1.0.0'
 
 mdxnet_models_dir = os.path.join(BASE_DIR, 'mdxnet_models')
 rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
@@ -690,6 +691,57 @@ def show_hop_slider(pitch_detection_algo):
         return gr.update(visible=False)
 
 
+def _run_cover_request(song_input, request, progress):
+    if not isinstance(request, dict):
+        raise gr.Error('Invalid cover settings.')
+    return song_cover_pipeline(
+        song_input,
+        request.get('voice_model'),
+        request.get('pitch_change', 0),
+        request.get('keep_files', False),
+        is_webui=1,
+        main_gain=request.get('main_gain', 0),
+        backup_gain=request.get('backup_gain', 0),
+        inst_gain=request.get('inst_gain', 0),
+        index_rate=request.get('index_rate', 0.5),
+        filter_radius=request.get('filter_radius', 3),
+        rms_mix_rate=request.get('rms_mix_rate', 0.25),
+        f0_method=request.get('f0_method', 'rmvpe'),
+        crepe_hop_length=request.get('crepe_hop_length', 128),
+        protect=request.get('protect', 0.33),
+        pitch_change_all=request.get('pitch_change_all', 0),
+        reverb_rm_size=request.get('reverb_rm_size', 0.15),
+        reverb_wet=request.get('reverb_wet', 0.2),
+        reverb_dry=request.get('reverb_dry', 0.8),
+        reverb_damping=request.get('reverb_damping', 0.7),
+        output_format=request.get('output_format', 'mp3'),
+        progress=progress,
+    )
+
+
+def api_generate_cover(request, progress=gr.Progress()):
+    song_input = request.get('song_input') if isinstance(request, dict) else None
+    return _run_cover_request(song_input, request, progress)
+
+
+def api_generate_cover_from_file(audio_file, request, progress=gr.Progress()):
+    audio_path = get_uploaded_file_path(audio_file)
+    return _run_cover_request(audio_path, request, progress)
+
+
+def api_download_voice_model(request, progress=gr.Progress()):
+    if not isinstance(request, dict):
+        raise gr.Error('Invalid model download request.')
+    return download_online_model(request.get('url'), request.get('name'), progress)
+
+
+def api_upload_voice_model(archive, request, progress=gr.Progress()):
+    if not isinstance(request, dict):
+        raise gr.Error('Invalid model upload request.')
+    archive_path = get_uploaded_file_path(archive)
+    return upload_local_model(archive_path, request.get('name'), progress)
+
+
 if __name__ == '__main__':
     parser = ArgumentParser(description='Generate an AI cover song in the song_output/id directory.', add_help=True)
     parser.add_argument("--share", action="store_true", dest="share_enabled", default=False, help="Enable sharing")
@@ -723,18 +775,18 @@ if __name__ == '__main__':
         button_primary_text_color="#ffffff",
     )
 
-    with gr.Blocks(title='AICoverGen Studio', css=CUSTOM_CSS, theme=custom_theme) as app:
+    with gr.Blocks(title=f'S.H.A.L.E Studio · v{APP_VERSION}', css=CUSTOM_CSS, theme=custom_theme) as app:
         gr.HTML(
             '<header id="app-header">'
-            '<div class="eyebrow">AI AUDIO WORKSPACE · RVC V2</div>'
-            '<h1>AICoverGen <span style="color:#a99aff">Studio</span></h1>'
-            '<p>เปลี่ยนเสียงร้องให้เป็นสไตล์ที่คุณต้องการ ปรับแต่งมิกซ์ และสร้าง AI Cover ในพื้นที่ทำงานเดียว</p>'
-            '<span class="header-chip">● LOCAL WORKSPACE &nbsp; / &nbsp; VOICE CONVERSION</span>'
+            '<div class="eyebrow">S.H.A.L.E AUDIO LAB · RVC V2</div>'
+            '<h1>S.H.A.L.E <span style="color:#a99aff">Studio</span></h1>'
+            '<p>สร้าง AI Cover ปรับแต่งเสียงร้องและมิกซ์เพลงได้ในพื้นที่ทำงานเดียว</p>'
+            f'<span class="header-chip">● STUDIO EDITION {APP_VERSION} &nbsp; / &nbsp; VOICE CONVERSION</span>'
             '</header>'
         )
 
         with gr.Tabs():
-            with gr.Tab('♫  Studio'):
+            with gr.Tab('♫  Cover Studio'):
                 with gr.Row(equal_height=False, elem_classes=['studio-layout']):
                     with gr.Column(scale=6, min_width=320, elem_classes=['studio-column']):
                         with gr.Group(elem_classes=['ui-card']):
@@ -790,16 +842,16 @@ if __name__ == '__main__':
                     with gr.Column(scale=5, min_width=300, elem_classes=['studio-column']):
                         with gr.Group(elem_classes=['ui-card']):
                             gr.Markdown('<div class="section-heading">Generation</div><div class="section-subtitle">ตรวจสอบการตั้งค่าแล้วเริ่มสร้างผลงานของคุณ</div>')
-                            gr.Markdown('**พร้อมสร้าง AI Cover หรือยัง?**\n\nเลือกโมเดลเสียงและใส่แหล่งเพลงทางด้านซ้าย จากนั้นกดปุ่มด้านล่างเพื่อเริ่มประมวลผล')
-                            generate_btn = gr.Button('▶  Generate AI Cover', variant='primary', size='lg', elem_classes=['primary-action'], elem_id='generate-btn')
+                            gr.Markdown('**พร้อมสร้างผลงานแล้วหรือยัง?**\n\nเลือกโมเดลเสียงและแหล่งเพลง จากนั้นเริ่มประมวลผลได้ทันที โปรดใช้เฉพาะเสียงและโมเดลที่คุณมีสิทธิ์ใช้งาน')
+                            generate_btn = gr.Button('▶  สร้าง AI Cover', variant='primary', size='lg', elem_classes=['primary-action'], elem_id='generate-btn')
                             clear_btn = gr.ClearButton(value='Reset inputs', components=[song_input, rvc_model, keep_files, local_file], elem_classes=['secondary-btn'], elem_id='clear-btn')
                         with gr.Group(elem_id='output-card', elem_classes=['ui-card']):
-                            gr.Markdown('<div class="section-heading">Your output</div><div class="section-subtitle">ผลงานที่ประมวลผลเสร็จจะแสดงที่นี่</div>')
-                            ai_cover = gr.Audio(label='AI COVER PLAYER', type='filepath')
+                            gr.Markdown('<div class="section-heading">ผลงานของคุณ</div><div class="section-subtitle">เล่นและดาวน์โหลดไฟล์เสียงที่ประมวลผลเสร็จแล้ว</div>')
+                            ai_cover = gr.Audio(label='S.H.A.L.E COVER PLAYER', type='filepath')
                             gr.Markdown('<div class="section-subtitle">เคล็ดลับ: หากเสียงยังไม่ตรงใจ ลองปรับ Pitch หรือค่าภายใน Advanced audio settings แล้วสร้างใหม่</div>')
 
-            with gr.Tab('▦  Model Hub'):
-                gr.Markdown('## Voice Model Library\nจัดการโมเดลเสียงได้ 3 วิธี เลือกดาวน์โหลดจาก URL ค้นหาคลังสาธารณะ หรืออัปโหลดไฟล์ ZIP จากเครื่อง')
+            with gr.Tab('▦  Voice Models'):
+                gr.Markdown('## คลังโมเดลเสียง\nติดตั้งโมเดลจาก URL ค้นหาในคลังสาธารณะ หรืออัปโหลดไฟล์ ZIP จากเครื่อง')
                 with gr.Tabs():
                     with gr.Tab('Direct URL'):
                         with gr.Group(elem_classes=['ui-card']):
@@ -860,6 +912,59 @@ if __name__ == '__main__':
             outputs=[pitch, main_gain, backup_gain, inst_gain, index_rate, filter_radius, rms_mix_rate,
                      protect, f0_method, crepe_hop_length, pitch_all, reverb_rm_size, reverb_wet,
                      reverb_dry, reverb_damping, output_format, ai_cover]
+        )
+
+        api_cover_request = gr.JSON(label='request', visible=False)
+        api_audio_file = gr.File(label='audio_file', type='filepath', visible=False)
+        api_cover_output = gr.Audio(type='filepath', visible=False)
+        api_generate_url_button = gr.Button(visible=False)
+        api_generate_url_button.click(
+            api_generate_cover,
+            inputs=api_cover_request,
+            outputs=api_cover_output,
+            api_name='generate_cover',
+        )
+        api_generate_file_button = gr.Button(visible=False)
+        api_generate_file_button.click(
+            api_generate_cover_from_file,
+            inputs=[api_audio_file, api_cover_request],
+            outputs=api_cover_output,
+            api_name='generate_cover_from_file',
+        )
+
+        api_models_button = gr.Button(visible=False)
+        api_models_output = gr.JSON(visible=False)
+        api_models_button.click(
+            lambda: get_current_models(rvc_models_dir),
+            outputs=api_models_output,
+            api_name='list_voice_models',
+        )
+        api_public_models_button = gr.Button(visible=False)
+        api_public_models_output = gr.JSON(visible=False)
+        api_public_models_button.click(
+            lambda: public_models,
+            outputs=api_public_models_output,
+            api_name='list_public_models',
+        )
+
+        api_download_request = gr.JSON(label='request', visible=False)
+        api_download_button = gr.Button(visible=False)
+        api_download_output = gr.Textbox(visible=False)
+        api_download_button.click(
+            api_download_voice_model,
+            inputs=api_download_request,
+            outputs=api_download_output,
+            api_name='download_voice_model',
+        )
+        api_upload_file = gr.File(label='archive', type='filepath', visible=False)
+        api_upload_request = gr.JSON(label='request', visible=False)
+        api_upload_button = gr.Button(visible=False)
+        api_upload_output = gr.Textbox(visible=False)
+        api_upload_button.click(
+            api_upload_voice_model,
+            inputs=[api_upload_file, api_upload_request],
+            outputs=api_upload_output,
+            api_name='upload_voice_model',
         )
 
     app.queue()

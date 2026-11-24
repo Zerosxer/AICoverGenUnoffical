@@ -229,9 +229,7 @@ class Predictor(BasePredictor):
             )
             rvc_model = custom_rvc_model_download_name
         else:
-            print(
-                "[!] Since URL was provided, we will try to download the model and use it (even if `rvc_model` is not set to 'CUSTOM')."
-            )
+            print("[!] No custom model URL supplied; using the selected voice model.")
 
         # Convert pitch_change from string to numerical value for processing
         # 0 for no change, 1 for male to female, -1 for female to male

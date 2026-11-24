@@ -3,9 +3,9 @@ import gc
 import hashlib
 import json
 import os
+import re
 import subprocess
-from contextlib import suppress
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 
 import gradio as gr
 import librosa
@@ -19,6 +19,7 @@ from pydub import AudioSegment
 import torch
 
 from mdx import run_mdx
+from media_utils import get_youtube_video_id
 from model_utils import validate_model_name
 from rvc import Config, load_hubert, get_vc, rvc_infer
 
@@ -29,44 +30,12 @@ rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
 output_dir = os.path.join(BASE_DIR, 'song_output')
 
 
-def get_youtube_video_id(url, ignore_playlist=True):
-    """
-    Examples:
-    http://youtu.be/SA2iWivDJiE
-    http://www.youtube.com/watch?v=_oPAwA_Udwc&feature=feedu
-    http://www.youtube.com/embed/SA2iWivDJiE
-    http://www.youtube.com/v/SA2iWivDJiE?version=3&amp;hl=en_US
-    """
-    query = urlparse(url)
-    if query.hostname == 'youtu.be':
-        if query.path[1:] == 'watch':
-            return query.query[2:]
-        return query.path[1:]
-
-    if query.hostname in {'www.youtube.com', 'youtube.com', 'music.youtube.com'}:
-        if not ignore_playlist:
-            # use case: get playlist id not current video in playlist
-            with suppress(KeyError):
-                return parse_qs(query.query)['list'][0]
-        if query.path == '/watch':
-            return parse_qs(query.query)['v'][0]
-        if query.path[:7] == '/watch/':
-            return query.path.split('/')[1]
-        if query.path[:7] == '/embed/':
-            return query.path.split('/')[2]
-        if query.path[:3] == '/v/':
-            return query.path.split('/')[2]
-
-    # returns None for invalid YouTube url
-    return None
-
-
-def yt_download(link):
+def yt_download(link, download_dir):
+    os.makedirs(download_dir, exist_ok=True)
     ydl_opts = {
-        'format': 'bestaudio',
-        'outtmpl': '%(title)s',
-        'nocheckcertificate': True,
-        'ignoreerrors': True,
+        'format': 'bestaudio/best',
+        'outtmpl': os.path.join(download_dir, 'source.%(ext)s'),
+        'noplaylist': True,
         'no_warnings': True,
         'quiet': True,
         'extractaudio': True,
@@ -74,9 +43,19 @@ def yt_download(link):
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         result = ydl.extract_info(link, download=True)
-        download_path = ydl.prepare_filename(result, outtmpl='%(title)s.mp3')
+        if not result:
+            raise RuntimeError('YouTube did not return an audio download.')
+        download_path = ydl.prepare_filename(result)
+        converted_path = os.path.splitext(download_path)[0] + '.mp3'
+        if os.path.isfile(converted_path):
+            return converted_path
+        requested_downloads = result.get('requested_downloads') or []
+        for requested_download in requested_downloads:
+            filepath = requested_download.get('filepath')
+            if filepath and os.path.isfile(filepath):
+                return filepath
+        raise RuntimeError('The downloaded audio file could not be found.')
 
-    return download_path
 
 
 def raise_exception(error_msg, is_webui):
@@ -188,18 +167,18 @@ def display_progress(message, percent, is_webui, progress=None):
 
 
 def preprocess_song(song_input, mdx_model_params, song_id, is_webui, input_type, progress=None):
+    song_output_dir = os.path.join(output_dir, song_id)
+    os.makedirs(song_output_dir, exist_ok=True)
     keep_orig = False
     if input_type == 'yt':
         display_progress('[~] Downloading song...', 0, is_webui, progress)
-        song_link = song_input.split('&')[0]
-        orig_song_path = yt_download(song_link)
+        orig_song_path = yt_download(song_input, song_output_dir)
     elif input_type == 'local':
         orig_song_path = song_input
         keep_orig = True
     else:
         orig_song_path = None
 
-    song_output_dir = os.path.join(output_dir, song_id)
     orig_song_path = convert_to_stereo(orig_song_path)
 
     display_progress('[~] Separating Vocals from Instrumental...', 0.1, is_webui, progress)
@@ -270,24 +249,33 @@ def song_cover_pipeline(song_input, voice_model, pitch_change, keep_files,
     try:
         if not song_input or not voice_model:
             raise_exception('Ensure that the song input field and voice model field is filled.', is_webui)
+        if output_format not in {'mp3', 'wav'}:
+            raise_exception('Output format must be either mp3 or wav.', is_webui)
+        if f0_method not in {'rmvpe', 'mangio-crepe'}:
+            raise_exception('Pitch detection method must be rmvpe or mangio-crepe.', is_webui)
 
         display_progress('[~] Starting AI Cover Generation Pipeline...', 0, is_webui, progress)
 
         with open(os.path.join(mdxnet_models_dir, 'model_data.json')) as infile:
             mdx_model_params = json.load(infile)
 
-        # if youtube url
-        if urlparse(song_input).scheme == 'https':
+        song_input = song_input.strip()
+        if len(song_input) >= 2 and song_input[0] == song_input[-1] and song_input[0] in {'"', "'"}:
+            song_input = song_input[1:-1].strip()
+        parsed_input = urlparse(song_input)
+        is_windows_path = re.match(r'^[A-Za-z]:[\\/]', song_input) is not None
+        if parsed_input.scheme.lower() in {'http', 'https'}:
             input_type = 'yt'
             song_id = get_youtube_video_id(song_input)
             if song_id is None:
-                error_msg = 'Invalid YouTube url.'
+                error_msg = 'Enter a valid YouTube video URL or a local audio file path.'
                 raise_exception(error_msg, is_webui)
 
         # local audio file
         else:
+            if parsed_input.scheme and not is_windows_path:
+                raise_exception('Only YouTube URLs or local audio file paths are supported.', is_webui)
             input_type = 'local'
-            song_input = song_input.strip('\"')
             if os.path.exists(song_input):
                 song_id = get_hash(song_input)
             else:
@@ -305,8 +293,7 @@ def song_cover_pipeline(song_input, voice_model, pitch_change, keep_files,
             vocals_path, main_vocals_path = None, None
             paths = get_audio_paths(song_dir)
 
-            # if any of the audio files aren't available or keep intermediate files, rerun preprocess
-            if any(path is None for path in paths) or keep_files:
+            if any(not path or not os.path.isfile(path) for path in paths[1:]) or keep_files:
                 orig_song_path, vocals_path, instrumentals_path, main_vocals_path, backup_vocals_path, main_vocals_dereverb_path = preprocess_song(song_input, mdx_model_params, song_id, is_webui, input_type, progress)
             else:
                 orig_song_path, instrumentals_path, main_vocals_dereverb_path, backup_vocals_path = paths
@@ -314,7 +301,25 @@ def song_cover_pipeline(song_input, voice_model, pitch_change, keep_files,
         pitch_change = pitch_change * 12 + pitch_change_all
         model_cache_identity = get_model_cache_identity(voice_model, is_webui)
         ai_vocals_path = os.path.join(song_dir, f'{os.path.splitext(os.path.basename(orig_song_path))[0]}_{voice_model}_m{model_cache_identity}_p{pitch_change}_i{index_rate}_fr{filter_radius}_rms{rms_mix_rate}_pro{protect}_{f0_method}{"" if f0_method != "mangio-crepe" else f"_{crepe_hop_length}"}.wav')
-        ai_cover_path = os.path.join(song_dir, f'{os.path.splitext(os.path.basename(orig_song_path))[0]} ({voice_model} Ver).{output_format}')
+        mix_settings = {
+            'main_gain': main_gain,
+            'backup_gain': backup_gain,
+            'inst_gain': inst_gain,
+            'pitch_change_all': pitch_change_all,
+            'reverb_rm_size': reverb_rm_size,
+            'reverb_wet': reverb_wet,
+            'reverb_dry': reverb_dry,
+            'reverb_damping': reverb_damping,
+            'output_format': output_format,
+        }
+        mix_identity = hashlib.blake2b(
+            json.dumps(mix_settings, sort_keys=True).encode('utf-8'),
+            digest_size=5,
+        ).hexdigest()
+        ai_cover_path = os.path.join(
+            song_dir,
+            f'{os.path.splitext(os.path.basename(orig_song_path))[0]} ({voice_model} Ver {mix_identity}).{output_format}',
+        )
 
         if not os.path.exists(ai_vocals_path):
             display_progress('[~] Converting voice using RVC...', 0.5, is_webui, progress)
