@@ -8,20 +8,9 @@ import subprocess
 from urllib.parse import urlparse
 
 import gradio as gr
-import librosa
-import numpy as np
-import soundfile as sf
-import sox
-import yt_dlp
-from pedalboard import Pedalboard, Reverb, Compressor, HighpassFilter
-from pedalboard.io import AudioFile
-from pydub import AudioSegment
-import torch
 
-from mdx import run_mdx
 from media_utils import get_youtube_video_id
 from model_utils import validate_model_name
-from rvc import Config, load_hubert, get_vc, rvc_infer
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,6 +20,8 @@ output_dir = os.path.join(BASE_DIR, 'song_output')
 
 
 def yt_download(link, download_dir):
+    import yt_dlp
+
     os.makedirs(download_dir, exist_ok=True)
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -125,6 +116,8 @@ def get_audio_paths(song_dir):
 
 
 def convert_to_stereo(audio_path):
+    import librosa
+
     wave, sr = librosa.load(audio_path, mono=False, sr=44100)
 
     if wave.ndim == 1:
@@ -139,6 +132,9 @@ def convert_to_stereo(audio_path):
 
 
 def pitch_shift(audio_path, pitch_change):
+    import soundfile as sf
+    import sox
+
     output_path = f'{os.path.splitext(audio_path)[0]}_p{pitch_change}.wav'
     if not os.path.exists(output_path):
         y, sr = sf.read(audio_path)
@@ -167,6 +163,8 @@ def display_progress(message, percent, is_webui, progress=None):
 
 
 def preprocess_song(song_input, mdx_model_params, song_id, is_webui, input_type, progress=None):
+    from mdx import run_mdx
+
     song_output_dir = os.path.join(output_dir, song_id)
     os.makedirs(song_output_dir, exist_ok=True)
     keep_orig = False
@@ -194,6 +192,10 @@ def preprocess_song(song_input, mdx_model_params, song_id, is_webui, input_type,
 
 
 def voice_change(voice_model, vocals_path, output_path, pitch_change, f0_method, index_rate, filter_radius, rms_mix_rate, protect, crepe_hop_length, is_webui):
+    import torch
+
+    from rvc import Config, get_vc, load_hubert, rvc_infer
+
     rvc_model_path, rvc_index_path = get_rvc_model(voice_model, is_webui)
     if torch.cuda.is_available():
         device = 'cuda:0'
@@ -212,6 +214,9 @@ def voice_change(voice_model, vocals_path, output_path, pitch_change, f0_method,
 
 
 def add_audio_effects(audio_path, reverb_rm_size, reverb_wet, reverb_dry, reverb_damping):
+    from pedalboard import Pedalboard, Reverb, Compressor, HighpassFilter
+    from pedalboard.io import AudioFile
+
     output_path = f'{os.path.splitext(audio_path)[0]}_mixed.wav'
 
     # Initialize audio effects plugins
@@ -235,6 +240,8 @@ def add_audio_effects(audio_path, reverb_rm_size, reverb_wet, reverb_dry, reverb
 
 
 def combine_audio(audio_paths, output_path, main_gain, backup_gain, inst_gain, output_format):
+    from pydub import AudioSegment
+
     main_vocal_audio = AudioSegment.from_wav(audio_paths[0]) - 4 + main_gain
     backup_vocal_audio = AudioSegment.from_wav(audio_paths[1]) - 6 + backup_gain
     instrumental_audio = AudioSegment.from_wav(audio_paths[2]) - 7 + inst_gain
